@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+  master:
+    hostname: chia_master
+    image: 192.168.10.40:5050/chia:latest
+    volumes:
+      - /work/chia/blockchain/db:/root/.chia/mainnet/db
+      - /work/chia/blockchain/wallet:/root/.chia/mainnet/wallet
+    environment:
+      mode: master
+      verbose: "true"
+      farmer_address: chia_master
+    restart: always
+    deploy:
+      mode: global
+      placement:
+        constraints:
+        - node.labels.database == true
+    ports:
+      - "8444:8444"
+      - "8447:8447"
+    
+  harvester:
+    image: 192.168.10.40:5050/chia:latest
+    volumes:
+    - /root/plots:/plots
+    environment:
+      mode: harvester
+      farmer_address: chia_master
+      ftp_port: 21
+      verbose: "true"
+      delay: 10
+    restart: always
+    deploy:
+      mode: global
+      placement:
+        constraints:
+        - node.labels.storage == true
+    depends_on:
+    - master
+    
+  plotter:
+    image: 192.168.10.40:5050/chia:latest
+    volumes:
+      - /work:/work
+      - plots_q:/plots
+    environment:
+      mode: plotter
+      loop: 1
+      verbose: "true"
+      delay: 0
+    restart: "no"
+    deploy:
+      mode: replicated
+      replicas: 0
+      stop_grace_period: 5h
+      placement:
+        constraints:
+        - node.labels.compute == true
+    #3000s毎に順に起動するなら下記コマンドを実行
+    #for I in `seq 1 5`;do docker service scale Chia_plotter=${I};sleep 3000;done 
+        
+volumes:
+  plots_q:
+    driver: local
+    driver_opts:
+      type: cifs
+      o: "username=chia,password=1234567890,rw,vers=3.0"
+      device: //192.168.10.100/chia/plots
