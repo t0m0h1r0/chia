@@ -1,0 +1,9 @@
+debug = true
+# root is where all buildkit state is stored.
+root = "/var/lib/buildkit"
+# insecure-entitlements allows insecure entitlements, disabled by default.
+insecure-entitlements = [ "network.host", "security.insecure" ]
+
+[registry."192.168.10.40:5050"]
+    http = true
+    insecure = true
