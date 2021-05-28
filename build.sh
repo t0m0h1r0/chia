@@ -1,6 +1,5 @@
 #!/bin/bash
 #run a command below
-#docker buildx create --name multi-arch --platform linux/amd64,linux/arm64 && docker buildx use multi-arch
 
 ARCH=(arm64 amd64)
 ADDR="192.168.10.40"
@@ -8,6 +7,7 @@ PORT="5050"
 KEY_FILE="./key"
 #KEY_FILE="/Volumes/chia/keys/key"
 
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 docker buildx create \
 	--platform linux/amd64,linux/arm64 \
 	--config buildkitd.toml \
