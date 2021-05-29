@@ -7,7 +7,7 @@ EXPOSE 8555
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG chia_ver=latest
-RUN apt-get update && apt-get install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils nfs-common apt lsb-release sudo vsftpd ftp systemctl
+RUN apt-get update && apt-get install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils nfs-common apt lsb-release sudo vsftpd ftp systemctl curl
 
 RUN --mount=type=secret,id=chiakey,dst=/key \
 	git clone --branch ${chia_ver} https://github.com/Chia-Network/chia-blockchain.git && \
@@ -42,7 +42,6 @@ ENV delay "0"
 
 WORKDIR /chia-blockchain
 ADD ./entrypoint.sh entrypoint.sh
-ADD ./get_ca.sh get_ca.sh
 ADD ./vsftpd.conf /etc/vsftpd.conf
 RUN chmod +x entrypoint.sh
 
