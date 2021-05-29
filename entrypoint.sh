@@ -1,4 +1,5 @@
 #!/bin/bash
+sleeptime=10
 
 cd /chia-blockchain
 . activate
@@ -18,7 +19,7 @@ if [ ${mode} = "master" ];then
   systemctl start vsftpd
   trap 'chia stop farmer' TERM INT STOP ERR
   chia start farmer
-  while true;do sleep 1;done
+  while true;do sleep ${sleeptime};done
 
 elif [ ${mode} = "harvester" ];then
   sh get_ca.sh
@@ -26,7 +27,7 @@ elif [ ${mode} = "harvester" ];then
   chia configure --set-farmer-peer ${farmer_address}:${farmer_port}
   trap 'chia stop harvester' TERM INT STOP ERR
   chia start harvester
-  while true;do sleep 1;done
+  while true;do sleep ${sleeptime};done
 
 elif [ ${mode} = "plotter" ];then
   trap 'rm -rf ${work_dir}' TERM INT STOP ERR
