@@ -44,5 +44,7 @@ WORKDIR /chia-blockchain
 ADD ./entrypoint.sh entrypoint.sh
 ADD ./get_ca.sh get_ca.sh
 ADD ./vsftpd.conf /etc/vsftpd.conf
+RUN chmod +x entrypoint.sh
 
-ENTRYPOINT ["bash","./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
+#ENTRYPOINT ["bash","./entrypoint.sh"]
