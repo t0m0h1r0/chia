@@ -12,6 +12,7 @@ services:
       verbose: "true"
       farmer_address: chia_master
     restart: always
+    stop_grace_period: 1m
     deploy:
       mode: global
       placement:
@@ -32,6 +33,7 @@ services:
       verbose: "true"
       delay: 10
     restart: always
+    stop_grace_period: 1m
     deploy:
       mode: global
       placement:
@@ -51,10 +53,10 @@ services:
       verbose: "true"
       delay: 0
     restart: "no"
+    #stop_grace_period: 7h
     deploy:
       mode: replicated
       replicas: 0
-      stop_grace_period: 5h
       placement:
         constraints:
         - node.labels.compute == true
@@ -66,5 +68,5 @@ volumes:
     driver: local
     driver_opts:
       type: cifs
-      o: "username=chia,password=1234567890,rw,vers=3.0"
+      o: "username=chia,password=yC82jtMbn,rw,vers=3.0"
       device: //192.168.10.100/chia/plots
