@@ -7,27 +7,17 @@ EXPOSE 8555
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG chia_ver=latest
-RUN apt-get update && apt-get install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils nfs-common apt lsb-release sudo vsftpd ftp systemctl curl
+RUN apt-get update && apt-get install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils nfs-common apt lsb-release sudo systemctl
 
-RUN --mount=type=secret,id=chiakey,dst=/key \
-	git clone --branch ${chia_ver} https://github.com/Chia-Network/chia-blockchain.git && \
+RUN git clone --branch ${chia_ver} https://github.com/Chia-Network/chia-blockchain.git && \
 	cd chia-blockchain && \
 	git submodule update --init mozilla-ca && \
 	sed -i '/sudo apt-get install -y python3/d' install.sh && \
 	sh install.sh && \
 	echo done
-RUN --mount=type=secret,id=chiakey,dst=/key \
-	cd chia-blockchain && \
-	. ./activate && \
-	chia init && \
-	chia keys add -f /key && \
-	mkdir /plots && mkdir /work && mkdir /ca && \
+RUN cd chia-blockchain && \
+	mkdir /plots && mkdir /work && \
 	echo done
-
-ENV keys ""
-ENV certs_dir "/ca"
-ENV plots_dir "/plots"
-ENV verbose false
 
 #select master, harvester, or plotter
 ENV mode "master"
@@ -38,11 +28,12 @@ ENV pool_key "b526b72cb7841a757d919b8d7d412643ccfbf7de3b8eee50a27ba2cc62f21b37aa
 ENV loop=1
 ENV tmp_dir=/work
 ENV ftp_port "21"
-ENV delay "0"
+ENV ca_dir=/run/secrets/
+ENV key_file=/run/secrets/chiakey
+ENV plots_dir "/plots"
 
 WORKDIR /chia-blockchain
 ADD ./entrypoint.sh entrypoint.sh
-ADD ./vsftpd.conf /etc/vsftpd.conf
 RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
