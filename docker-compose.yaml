@@ -1,4 +1,16 @@
-version: "3"
+version: "3.4"
+
+secrets:
+  chiakey:
+    external: true
+  chia_ca.crt:
+    external: true
+  chia_ca.key:
+    external: true
+  private_ca.crt:
+    external: true
+  private_ca.key:
+    external: true
 
 services:
   master:
@@ -21,7 +33,14 @@ services:
     ports:
       - "8444:8444"
       - "8447:8447"
-    
+    secrets:
+    - chiakey
+    - chia_ca.crt
+    - chia_ca.key
+    - private_ca.crt
+    - private_ca.key
+
+
   harvester:
     image: 192.168.10.40:5050/chia:latest
     volumes:
@@ -31,7 +50,6 @@ services:
       farmer_address: chia_master
       ftp_port: 21
       verbose: "true"
-      delay: 10
     restart: always
     stop_grace_period: 1m
     deploy:
@@ -41,6 +59,12 @@ services:
         - node.labels.storage == true
     depends_on:
     - master
+    secrets:
+    - chiakey
+    - chia_ca.crt
+    - chia_ca.key
+    - private_ca.crt
+    - private_ca.key
     
   plotter:
     image: 192.168.10.40:5050/chia:latest
@@ -54,6 +78,12 @@ services:
       delay: 0
     restart: "no"
     #stop_grace_period: 7h
+    secrets:
+    - chiakey
+    - chia_ca.crt
+    - chia_ca.key
+    - private_ca.crt
+    - private_ca.key
     deploy:
       mode: replicated
       replicas: 0
@@ -68,5 +98,5 @@ volumes:
     driver: local
     driver_opts:
       type: cifs
-      o: "username=chia,password=yC82jtMbn,rw,vers=3.0"
+      o: "username=chia,password=xxxxxxxx,rw,vers=3.0"
       device: //192.168.10.100/chia/plots
