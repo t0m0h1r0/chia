@@ -1,35 +1,31 @@
 #!/bin/bash
-sleeptime=10
+sleep_time=10
 
 cd /chia-blockchain
 . activate
+
+chia init
+chia keys add -f ${key_file}
+chia init --create-certs ${ca_dir}
+chia configure --log-level INFO
 sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
 if ${verbose}; then
   sed -i 's/log_stdout: false/log_stdout: true/g' ~/.chia/mainnet/config/config.yaml
 fi
-
 if [[ -n ${plots_dir} ]];then
   chia plots add -d ${plots_dir}
 fi
-chia configure --log-level INFO
-sleep ${delay}
 
 if [ ${mode} = "master" ];then
-  sed -i "s/xxx.xxx.xxx.xxx/${farmer_address}/g" /etc/vsftpd.conf
-  systemctl start vsftpd
   trap 'chia stop farmer' TERM INT STOP ERR
   chia start farmer
-  while true;do sleep ${sleeptime};done
+  while true;do sleep ${sleep_time};done
 
 elif [ ${mode} = "harvester" ];then
-  for FILE in chia_ca.crt chia_ca.key private_ca.crt private_ca.key
-    do curl -u anonymous:none --retry-delay 10 ftp://${farmer_address}/${FILE} -o /ca/${FILE}
-  done
-  chia init --create-certs ${certs_dir}
   chia configure --set-farmer-peer ${farmer_address}:${farmer_port}
   trap 'chia stop harvester' TERM INT STOP ERR
   chia start harvester
-  while true;do sleep ${sleeptime};done
+  while true;do sleep ${sleep_time};done
 
 elif [ ${mode} = "plotter" ];then
   trap 'rm -rf ${work_dir}' TERM INT STOP ERR
