@@ -22,7 +22,9 @@ if [ ${mode} = "master" ];then
   while true;do sleep ${sleeptime};done
 
 elif [ ${mode} = "harvester" ];then
-  sh get_ca.sh
+  for FILE in chia_ca.crt chia_ca.key private_ca.crt private_ca.key
+    do curl -u anonymous:none --retry-delay 10 ftp://${farmer_address}/${FILE} -o /ca/${FILE}
+  done
   chia init --create-certs ${certs_dir}
   chia configure --set-farmer-peer ${farmer_address}:${farmer_port}
   trap 'chia stop harvester' TERM INT STOP ERR
