@@ -26,8 +26,8 @@ ENV farmer_port "8447"
 ENV farmer_key "999f6d391272a23cae8d4ce2589ce88931d28de9dc99e1d900fbbb7a4c78b3c2671996747a5e8134227c9485a81a8f41"
 ENV pool_key "b526b72cb7841a757d919b8d7d412643ccfbf7de3b8eee50a27ba2cc62f21b37aafc49fa2a225b92dbb975564ea1945e"
 ENV loop=1
+ENV parallel=4
 ENV tmp_dir=/work
-ENV ftp_port "21"
 ENV ca_dir=/run/secrets/
 ENV key_file=/run/secrets/chiakey
 ENV plots_dir "/plots"
@@ -37,4 +37,3 @@ ADD ./entrypoint.sh entrypoint.sh
 RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
-#ENTRYPOINT ["bash","./entrypoint.sh"]
