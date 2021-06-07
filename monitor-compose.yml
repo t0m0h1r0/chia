@@ -1,0 +1,53 @@
+version: "3.7"
+networks:
+  loki:
+    driver: overlay
+    attachable: true
+ 
+services:
+ loki:
+   image: grafana/loki:latest
+   ports:
+   - "3100:3100"
+   networks:
+   - loki
+   deploy:
+     mode: global
+     placement:
+       constraints:
+       - node.role == manager
+   
+ promtail:
+   image: grafana/promtail:latest
+   volumes:
+   - docker_dir:/var/lib/docker:ro
+   configs:
+   - source: promtail.yaml
+     target: /etc/promtail/config.yml
+   networks:
+     - loki
+   deploy:
+     mode: global
+     
+ grafana:
+   image: grafana/grafana:master
+   volumes:
+   - grafana_vol:/var/lib/grafana
+   ports:
+   - "3000:3000"
+   networks:
+   - loki
+   deploy:
+     mode: global
+     placement:
+       constraints:
+       - node.role == manager
+     
+configs:
+  promtail.yaml:
+    external: true
+    
+volumes:
+  docker_dir:
+    external: true
+  grafana_vol:
