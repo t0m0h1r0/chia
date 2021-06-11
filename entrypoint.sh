@@ -32,7 +32,15 @@ elif [ ${mode} = "plotter" ];then
   work_dir=${tmp_dir}/`hostname`
   mkdir ${work_dir}
   rm -rf ${work_dir}/*
-  chia plots create -f ${farmer_key} -p ${pool_key} -t ${work_dir} -d ${plots_dir} -k 32 -n ${loop} -b 4500 -r ${parallel}
+  chia plots create -f ${farmer_key} -p ${pool_key} -t ${work_dir} -d ${plots_dir} -k 32 -n ${loop} -b 4500 -r ${thread}
+  rm -rf ${work_dir}
+
+elif [ ${mode} = "plotter-fast" ];then
+  trap 'rm -rf ${work_dir}' TERM INT STOP ERR
+  work_dir=${tmp_dir}/`hostname`
+  mkdir ${work_dir}
+  rm -rf ${work_dir}/*
+  /chia-plotter/build/chia_plot -f ${farmer_key} -p ${pool_key} -t ${work_dir} -d ${plots_dir} -n ${loop} -r ${thread}
   rm -rf ${work_dir}
 
 else
