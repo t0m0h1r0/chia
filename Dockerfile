@@ -33,6 +33,7 @@ ENV farmer_key "999f6d391272a23cae8d4ce2589ce88931d28de9dc99e1d900fbbb7a4c78b3c2
 ENV pool_key "b526b72cb7841a757d919b8d7d412643ccfbf7de3b8eee50a27ba2cc62f21b37aafc49fa2a225b92dbb975564ea1945e"
 ENV loop=1
 ENV thread=2
+ENV testnet=false
 ENV tmp_dir=/work
 ENV ca_dir=/run/secrets/
 ENV key_file=/run/secrets/chiakey
