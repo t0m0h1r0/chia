@@ -1,18 +1,25 @@
 #!/bin/bash
 sleep_time=10
+echo HOSTNAME `hostname`
 
 cd /chia-blockchain
 . activate
 
+if ${update}; then
+  git pull
+  sh install.sh
+fi
+
 chia init
 chia configure --log-level INFO
-sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
-if ${verbose}; then
-  sed -i 's/log_stdout: false/log_stdout: true/g' ~/.chia/mainnet/config/config.yaml
-fi
 if ${testnet}; then
   chia configure --testnet true
-  chia configure --set-node-introducer testnet8-testnet8-introducer-0.chia.net:58445
+  chia configure --set-node-introducer testnet-node.chia.net:58444
+fi
+
+sed -i 's/localhost/127.0.0.1/g' /root/.chia/mainnet/config/config.yaml
+if ${verbose}; then
+  sed -i 's/log_stdout: false/log_stdout: true/g' /root/.chia/mainnet/config/config.yaml
 fi
 if [[ -n ${plots_dir} ]];then
   chia plots add -d ${plots_dir}
@@ -41,13 +48,9 @@ elif [ ${mode} = "plotter" ];then
   rm -rf ${work_dir}
 
 elif [ ${mode} = "plotter-fast" ];then
-  trap 'rm -rf ${work_dir}' TERM INT STOP ERR
-  rm -rf ${tmp_dir}/*
-  work_dir=${tmp_dir}/`hostname`
-  mkdir ${work_dir}
-  rm -rf ${work_dir}/*
+  #trap 'rm -rf ${work_dir}' TERM INT STOP ERR
+  work_dir=${tmp_dir}
   /chia-plotter/build/chia_plot -f ${farmer_key} -p ${pool_key} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
-  rm -rf ${work_dir}
 
 else
   echo "No Job"
