@@ -34,6 +34,7 @@ ENV pool_key "b526b72cb7841a757d919b8d7d412643ccfbf7de3b8eee50a27ba2cc62f21b37aa
 ENV loop=1
 ENV thread=2
 ENV testnet=false
+ENV update=false
 ENV tmp_dir=/work
 ENV ca_dir=/run/secrets/
 ENV key_file=/run/secrets/chiakey
