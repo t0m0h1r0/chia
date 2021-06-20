@@ -7,12 +7,12 @@ EXPOSE 8555
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG chia_ver=latest
-RUN apt-get update && apt-get install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils nfs-common apt lsb-release sudo systemctl libsodium-dev libgmp3-dev cmake g++ git
+RUN apt update && apt install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils nfs-common apt lsb-release sudo systemctl libsodium-dev libgmp3-dev cmake g++ git
 
 RUN git clone --branch ${chia_ver} https://github.com/Chia-Network/chia-blockchain.git && \
 	cd chia-blockchain && \
 	git submodule update --init mozilla-ca && \
-	sed -i '/sudo apt-get install -y python3/d' install.sh && \
+	#sed -i '/sudo apt-get install -y python3/d' install.sh && \
 	sh install.sh && \
 	echo done
 RUN git clone https://github.com/madMAx43v3r/chia-plotter.git && \
