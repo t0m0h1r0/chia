@@ -1,29 +1,41 @@
+FROM ubuntu:hirsute AS builder
+USER root
+ARG chia_ver=main
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils nfs-common apt lsb-release sudo systemctl libsodium-dev libgmp3-dev cmake g++ bc
+RUN git config --global user.email "you@example.com"
+RUN git config --global user.name "Your Name"
+
+WORKDIR /tmp/
+RUN git clone --branch ${chia_ver} https://github.com/Chia-Network/chia-blockchain.git
+WORKDIR /tmp/chia-blockchain
+RUN git submodule update --init mozilla-ca
+#RUN sed -i '/sudo apt-get install -y python3/d' install.sh
+RUN sh install.sh
+
+WORKDIR /tmp/
+RUN git clone https://github.com/madMAx43v3r/chia-plotter.git
+WORKDIR /tmp/chia-plotter
+RUN git submodule update --init
+RUN git checkout pool-puzzles
+RUN git merge --no-edit master
+RUN ./make_devel.sh
+RUN ./build/chia_plot --help
+
+####################
 FROM ubuntu:hirsute
 USER root
-
 EXPOSE 8444
 EXPOSE 8447
 EXPOSE 8555
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG chia_ver=latest
-RUN apt update && apt install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils nfs-common apt lsb-release sudo systemctl libsodium-dev libgmp3-dev cmake g++ git
+ARG chia_ver=main
+RUN apt update && apt install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils apt lsb-release sudo systemctl bc
 
-RUN git clone --branch ${chia_ver} https://github.com/Chia-Network/chia-blockchain.git && \
-	cd chia-blockchain && \
-	git submodule update --init mozilla-ca && \
-	#sed -i '/sudo apt-get install -y python3/d' install.sh && \
-	sh install.sh && \
-	echo done
-RUN git clone https://github.com/madMAx43v3r/chia-plotter.git && \
-	cd chia-plotter && \
-	git submodule update --init && \
-	./make_devel.sh && \
-	./build/chia_plot --help && \
-	echo done
-RUN cd chia-blockchain && \
-	mkdir /plots && mkdir /work && \
-	echo done
+COPY --from=builder /tmp/chia-blockchain /chia-blockchain
+COPY --from=builder /tmp/chia-plotter/build/chia_plot /chia-blockchain/venv/bin/
+RUN mkdir /plots && mkdir /work
 
 #select master, harvester, or plotter
 ENV mode "master"

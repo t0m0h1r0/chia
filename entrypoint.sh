@@ -6,6 +6,7 @@ cd /chia-blockchain
 . activate
 
 if ${update}; then
+  git checkout pools.dev
   git pull
   sh install.sh
 fi
@@ -50,7 +51,7 @@ elif [ ${mode} = "plotter" ];then
 elif [ ${mode} = "plotter-fast" ];then
   #trap 'rm -rf ${work_dir}' TERM INT STOP ERR
   work_dir=${tmp_dir}
-  /chia-plotter/build/chia_plot -f ${farmer_key} -p ${pool_key} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
+  chia_plot -f ${farmer_key} -p ${pool_key} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
 
 else
   echo "No Job"
