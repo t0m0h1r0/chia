@@ -2,20 +2,21 @@ FROM ubuntu:hirsute AS builder
 USER root
 ARG chia_ver=main
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt update && apt install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils nfs-common apt lsb-release sudo systemctl libsodium-dev libgmp3-dev cmake g++ bc
+RUN apt update
+RUN apt install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils nfs-common apt lsb-release sudo systemctl libsodium-dev libgmp3-dev cmake g++ bc
 RUN git config --global user.email "you@example.com"
 RUN git config --global user.name "Your Name"
 
-WORKDIR /tmp/
+WORKDIR /
 RUN git clone --branch ${chia_ver} https://github.com/Chia-Network/chia-blockchain.git
-WORKDIR /tmp/chia-blockchain
+WORKDIR /chia-blockchain
 RUN git submodule update --init mozilla-ca
 #RUN sed -i '/sudo apt-get install -y python3/d' install.sh
 RUN sh install.sh
 
-WORKDIR /tmp/
+WORKDIR /
 RUN git clone https://github.com/madMAx43v3r/chia-plotter.git
-WORKDIR /tmp/chia-plotter
+WORKDIR /chia-plotter
 RUN git submodule update --init
 RUN git checkout pool-puzzles
 RUN git merge --no-edit master
@@ -31,10 +32,11 @@ EXPOSE 8555
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG chia_ver=main
-RUN apt update && apt install -y bash python3 ca-certificates git openssl wget build-essential python3-dev python3-venv python3-distutils apt lsb-release sudo systemctl bc
+RUN apt update
+RUN apt install -y bash python3 ca-certificates git openssl python3-venv python3-distutils apt lsb-release sudo systemctl bc libsodium23
 
-COPY --from=builder /tmp/chia-blockchain /chia-blockchain
-COPY --from=builder /tmp/chia-plotter/build/chia_plot /chia-blockchain/venv/bin/
+COPY --from=builder /chia-blockchain /chia-blockchain
+COPY --from=builder /chia-plotter/build/chia_plot /chia-blockchain/venv/bin/
 RUN mkdir /plots && mkdir /work
 
 #select master, harvester, or plotter

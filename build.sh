@@ -5,7 +5,7 @@ ARCH=(arm64 amd64)
 ADDR="192.168.10.40"
 PORT="5050"
 KEY_FILE="./key"
-#KEY_FILE="/Volumes/chia/keys/key"
+TIME=`date "+%Y%m%d%H%M%S"`
 
 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 docker buildx create \
@@ -20,6 +20,7 @@ docker buildx build \
 	--build-arg chia_ver="${1:-latest}" \
 	-t ${ADDR}:${PORT}/chia:${1:-latest} \
 	-t ${ADDR}:${PORT}/chia:latest \
+	-t ${ADDR}:${PORT}/chia:${TIME} \
 	--push \
 	.
 	#-t ${ADDR}:${PORT}/chia:latest . --push

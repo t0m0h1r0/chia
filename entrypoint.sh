@@ -2,7 +2,6 @@
 sleep_time=10
 echo HOSTNAME `hostname`
 
-cd /chia-blockchain
 . activate
 
 if ${update}; then
