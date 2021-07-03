@@ -1,0 +1,301 @@
+ALERTS_URL: https://download.chia.net/notify/mainnet_alert.txt
+CHIA_ALERTS_PUBKEY: 89b7fd87cb56e926ecefb879a29aae308be01f31980569f6a75a69d2a9a69daefd71fb778d865f7c50d6c967e3025937
+chia_ssl_ca:
+  crt: config/ssl/ca/chia_ca.crt
+  key: config/ssl/ca/chia_ca.key
+daemon_max_message_size: 50000000
+daemon_port: 55400
+daemon_ssl:
+  private_crt: config/ssl/daemon/private_daemon.crt
+  private_key: config/ssl/daemon/private_daemon.key
+farmer:
+  full_node_peer:
+    host: 127.0.0.1
+    port: 8444
+  harvester_peer:
+    host: 127.0.0.1
+    port: 8448
+  logging: &id001
+    log_filename: log/debug.log
+    log_level: INFO
+    log_maxfilesrotation: 7
+    log_stdout: true
+    log_syslog: false
+    log_syslog_host: 127.0.0.1
+    log_syslog_port: 514
+  network_overrides: &id002
+    config:
+      mainnet:
+        address_prefix: xch
+        default_full_node_port: 8444
+      testnet0:
+        address_prefix: txch
+      testnet1:
+        address_prefix: txch
+      testnet2:
+        address_prefix: txch
+      testnet3:
+        address_prefix: txch
+      testnet4:
+        address_prefix: txch
+      testnet7:
+        address_prefix: txch
+        default_full_node_port: 58444
+    constants:
+      mainnet:
+        GENESIS_CHALLENGE: ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb
+        GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+        GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+        NETWORK_TYPE: 0
+      testnet0:
+        GENESIS_CHALLENGE: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+        GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+        MIN_PLOT_SIZE: 18
+        NETWORK_TYPE: 1
+      testnet2:
+        DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+        GENESIS_CHALLENGE: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+        GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+        GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+        MIN_PLOT_SIZE: 18
+        NETWORK_TYPE: 1
+      testnet3:
+        DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+        GENESIS_CHALLENGE: ca7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+        GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+        GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+        MEMPOOL_BLOCK_BUFFER: 10
+        MIN_PLOT_SIZE: 18
+        NETWORK_TYPE: 1
+      testnet4:
+        DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+        DIFFICULTY_STARTING: 30
+        EPOCH_BLOCKS: 768
+        GENESIS_CHALLENGE: dd7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+        GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+        GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+        MEMPOOL_BLOCK_BUFFER: 10
+        MIN_PLOT_SIZE: 18
+        NETWORK_TYPE: 1
+      testnet5:
+        DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+        DIFFICULTY_STARTING: 30
+        EPOCH_BLOCKS: 768
+        GENESIS_CHALLENGE: ee7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+        GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+        GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+        MEMPOOL_BLOCK_BUFFER: 10
+        MIN_PLOT_SIZE: 18
+        NETWORK_TYPE: 1
+      testnet7:
+        DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+        DIFFICULTY_STARTING: 30
+        EPOCH_BLOCKS: 768
+        GENESIS_CHALLENGE: 117816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+        GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+        GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+        MEMPOOL_BLOCK_BUFFER: 10
+        MIN_PLOT_SIZE: 18
+        NETWORK_TYPE: 1
+  pool_public_keys: !!set
+    b526b72cb7841a757d919b8d7d412643ccfbf7de3b8eee50a27ba2cc62f21b37aafc49fa2a225b92dbb975564ea1945e: null
+  pool_share_threshold: 1000
+  port: 8447
+  rpc_port: 8559
+  selected_network: mainnet
+  ssl:
+    private_crt: config/ssl/farmer/private_farmer.crt
+    private_key: config/ssl/farmer/private_farmer.key
+    public_crt: config/ssl/farmer/public_farmer.crt
+    public_key: config/ssl/farmer/public_farmer.key
+  start_rpc_server: true
+  xch_target_address: xch15h6f72asy5ldx4ry4k59jvm2dq8zt3f3wynunywvwel2r5psj7pq6hyk6t
+full_node:
+  database_path: db/blockchain_v1_CHALLENGE.sqlite
+  db_sync: auto
+  dns_servers:
+  - dns-introducer.chia.net
+  enable_profiler: false
+  enable_upnp: true
+  exempt_peer_networks: []
+  farmer_peer:
+    host: 127.0.0.1
+    port: 8447
+  introducer_peer:
+    host: introducer.chia.net
+    port: 8444
+  log_sqlite_cmds: false
+  logging: *id001
+  max_inbound_farmer: 10
+  max_inbound_timelord: 5
+  max_inbound_wallet: 20
+  network_overrides: *id002
+  peer_connect_interval: 30
+  peer_connect_timeout: 30
+  peer_db_path: db/peer_table_node.sqlite
+  port: 8444
+  recent_peer_threshold: 6000
+  rpc_port: 8555
+  sanitize_weight_proof_only: false
+  selected_network: mainnet
+  send_uncompact_interval: 0
+  short_sync_blocks_behind_threshold: 20
+  simulator_database_path: sim_db/simulator_blockchain_v1_CHALLENGE.sqlite
+  simulator_peer_db_path: sim_db/peer_table_node.sqlite
+  ssl:
+    private_crt: config/ssl/full_node/private_full_node.crt
+    private_key: config/ssl/full_node/private_full_node.key
+    public_crt: config/ssl/full_node/public_full_node.crt
+    public_key: config/ssl/full_node/public_full_node.key
+  start_rpc_server: true
+  sync_blocks_behind_threshold: 300
+  target_outbound_peer_count: 8
+  target_peer_count: 20
+  target_uncompact_proofs: 100
+  timelord_peer:
+    host: 127.0.0.1
+    port: 8446
+  wallet_peer:
+    host: 127.0.0.1
+    port: 8449
+  weight_proof_timeout: 360
+harvester:
+  chia_ssl_ca:
+    crt: config/ssl/ca/chia_ca.crt
+    key: config/ssl/ca/chia_ca.key
+  farmer_peer:
+    host: 127.0.0.1
+    port: 8447
+  logging: *id001
+  network_overrides: *id002
+  num_threads: 30
+  parallel_read: true
+  plot_directories:
+  - /plots
+  plots_refresh_parameter:
+    batch_size: 300
+    batch_sleep_milliseconds: 1
+    interval_seconds: 120
+    retry_invalid_seconds: 1200
+  port: 8448
+  private_ssl_ca:
+    crt: config/ssl/ca/private_ca.crt
+    key: config/ssl/ca/private_ca.key
+  rpc_port: 8560
+  selected_network: mainnet
+  ssl:
+    private_crt: config/ssl/harvester/private_harvester.crt
+    private_key: config/ssl/harvester/private_harvester.key
+  start_rpc_server: true
+inbound_rate_limit_percent: 100
+introducer:
+  host: 127.0.0.1
+  logging: *id001
+  max_peers_to_send: 20
+  network_overrides: *id002
+  port: 8445
+  recent_peer_threshold: 6000
+  selected_network: mainnet
+  ssl:
+    public_crt: config/ssl/full_node/public_full_node.crt
+    public_key: config/ssl/full_node/public_full_node.key
+logging: *id001
+min_mainnet_k_size: 32
+network_overrides: *id002
+outbound_rate_limit_percent: 30
+ping_interval: 120
+pool:
+  logging: *id001
+  network_overrides: *id002
+  pool_list:
+  - authentication_public_key: '0xb085cc4cfa604b8cbdac47efb635092a9e5a352f9a45b13bb4f3ced244d2a009533d681d0456bd29fc624981fabfe24f'
+    launcher_id: '0x1ac89396b6d25abd0dea42709d740814337fb96fe56b23149ca32014a11e1da0'
+    owner_public_key: '0x962d21272e7a589bff0d0bf77492e03e3e1c89d674ba00306920a891078a869a15a02c3ce29440f89ece768c1eaae22d'
+    p2_singleton_puzzle_hash: '0x4d379db4ca7a516fa6c73bba3d4c3dcf424bce96ca2b6ede0d5192e5f12655f1'
+    payout_instructions: 1bb4b38a4ce1a2402c456d70c7d9e47115678a8e0fc0f3846a3694469a4fe79d
+    pool_url: https://na1.pool.space
+    target_puzzle_hash: '0x2f2c9ba1b2315d413a92b5f034fa03282ccba1767fd9ae7b14d942b969ed5d57'
+  selected_network: mainnet
+  xch_target_address: xch15h6f72asy5ldx4ry4k59jvm2dq8zt3f3wynunywvwel2r5psj7pq6hyk6t
+private_ssl_ca:
+  crt: config/ssl/ca/private_ca.crt
+  key: config/ssl/ca/private_ca.key
+selected_network: mainnet
+self_hostname: 127.0.0.1
+timelord:
+  fast_algorithm: false
+  full_node_peer:
+    host: 127.0.0.1
+    port: 8444
+  logging: *id001
+  max_connection_time: 60
+  network_overrides: *id002
+  port: 8446
+  sanitizer_mode: false
+  selected_network: mainnet
+  ssl:
+    private_crt: config/ssl/timelord/private_timelord.crt
+    private_key: config/ssl/timelord/private_timelord.key
+    public_crt: config/ssl/timelord/public_timelord.crt
+    public_key: config/ssl/timelord/public_timelord.key
+  vdf_clients:
+    ip:
+    - 127.0.0.1
+    - 127.0.0.1
+    - 127.0.0.1
+    ips_estimate:
+    - 150000
+  vdf_server:
+    host: 127.0.0.1
+    port: 8000
+timelord_launcher:
+  host: 127.0.0.1
+  logging: *id001
+  port: 8000
+  process_count: 3
+ui:
+  daemon_host: 127.0.0.1
+  daemon_port: 55400
+  daemon_ssl:
+    private_crt: config/ssl/daemon/private_daemon.crt
+    private_key: config/ssl/daemon/private_daemon.key
+  logging: *id001
+  network_overrides: *id002
+  port: 8222
+  rpc_port: 8555
+  selected_network: mainnet
+  ssh_filename: config/ssh_host_key
+wallet:
+  database_path: wallet/db/blockchain_wallet_v1_CHALLENGE_KEY.sqlite
+  db_sync: auto
+  enable_profiler: false
+  full_node_peer:
+    host: 127.0.0.1
+    port: 8444
+  initial_num_public_keys: 100
+  initial_num_public_keys_new_wallet: 5
+  introducer_peer:
+    host: introducer.chia.net
+    port: 8444
+  logging: *id001
+  network_overrides: *id002
+  num_sync_batches: 50
+  peer_connect_interval: 60
+  port: 8449
+  recent_peer_threshold: 6000
+  rpc_port: 9256
+  selected_network: mainnet
+  short_sync_blocks_behind_threshold: 20
+  ssl:
+    private_crt: config/ssl/wallet/private_wallet.crt
+    private_key: config/ssl/wallet/private_wallet.key
+    public_crt: config/ssl/wallet/public_wallet.crt
+    public_key: config/ssl/wallet/public_wallet.key
+  start_height_buffer: 100
+  starting_height: 0
+  target_peer_count: 5
+  testing: false
+  trusted_peers:
+    trusted_node_1: config/ssl/full_node/public_full_node.crt
+  wallet_peers_path: wallet/db/wallet_peers.sqlite
