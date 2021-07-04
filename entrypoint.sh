@@ -1,5 +1,4 @@
 #!/bin/bash
-sleep_time=10
 echo HOSTNAME `hostname`
 
 . activate
@@ -50,7 +49,9 @@ elif [ ${mode} = "plotter" ];then
 elif [ ${mode} = "plotter-fast" ];then
   #trap 'rm -rf ${work_dir}' TERM INT STOP ERR
   work_dir=${tmp_dir}
-  chia_plot -f ${farmer_key} -p ${pool_key} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
+  #rm ${plots_dir}/`ls /plots/|head -n1`
+  chia_plot -c ${singleton_address} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
+  #chia_plot -f ${farmer_key} -p ${pool_key} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
 
 else
   echo "No Job"

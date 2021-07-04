@@ -8,18 +8,16 @@ RUN git config --global user.email "you@example.com"
 RUN git config --global user.name "Your Name"
 
 WORKDIR /
-RUN git clone --branch ${chia_ver} https://github.com/Chia-Network/chia-blockchain.git
+RUN git clone https://github.com/Chia-Network/chia-blockchain.git --recurse-submodules
 WORKDIR /chia-blockchain
-RUN git submodule update --init mozilla-ca
-#RUN sed -i '/sudo apt-get install -y python3/d' install.sh
+RUN git checkout 89f7a4b3d6329493cd2b4bc5f346a819c99d3e7b
 RUN sh install.sh
 
 WORKDIR /
 RUN git clone https://github.com/madMAx43v3r/chia-plotter.git
 WORKDIR /chia-plotter
-RUN git submodule update --init
 RUN git checkout pool-puzzles
-RUN git merge --no-edit master
+RUN git submodule update --init
 RUN ./make_devel.sh
 RUN ./build/chia_plot --help
 
@@ -45,6 +43,7 @@ ENV farmer_address "127.0.0.1"
 ENV farmer_port "8447"
 ENV farmer_key "999f6d391272a23cae8d4ce2589ce88931d28de9dc99e1d900fbbb7a4c78b3c2671996747a5e8134227c9485a81a8f41"
 ENV pool_key "b526b72cb7841a757d919b8d7d412643ccfbf7de3b8eee50a27ba2cc62f21b37aafc49fa2a225b92dbb975564ea1945e"
+ENV singleton_address "xch1f5memdx20fgklfk88war6npaeapyhn5keg4kahsd2xfwtufx2hcsaaghdl"
 ENV loop=1
 ENV thread=2
 ENV testnet=false
