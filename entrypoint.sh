@@ -1,5 +1,6 @@
 #!/bin/bash
 echo HOSTNAME `hostname`
+sleep_time=10
 
 . activate
 
@@ -28,10 +29,13 @@ if [ ${mode} = "master" ];then
   trap 'chia stop farmer' TERM INT STOP ERR
   chia init --create-certs ${ca_dir}
   chia keys add -f ${key_file}
-  chia start farmer
+  chia start node
+  chia start farmer-only
+  chia start wallet-only
   while true;do sleep ${sleep_time};done
 
 elif [ ${mode} = "harvester" ];then
+  sleep 10
   chia init --create-certs ${ca_dir}
   chia configure --set-farmer-peer ${farmer_address}:${farmer_port}
   trap 'chia stop harvester' TERM INT STOP ERR
@@ -47,11 +51,14 @@ elif [ ${mode} = "plotter" ];then
   rm -rf ${work_dir}
 
 elif [ ${mode} = "plotter-fast" ];then
-  #trap 'rm -rf ${work_dir}' TERM INT STOP ERR
-  work_dir=${tmp_dir}
-  #rm ${plots_dir}/`ls /plots/|head -n1`
-  chia_plot -c ${singleton_address} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
-  #chia_plot -f ${farmer_key} -p ${pool_key} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
+  trap 'rm -rf ${work_dir}' TERM INT STOP ERR
+  work_dir=${tmp_dir}/`hostname`
+  mkdir ${work_dir}
+  #for I in `seq ${loop}`
+  #  do rm ${plots_dir}/`ls /plots/|sort|head -n1`
+  #done
+  chia_plot -f ${farmer_key} -c ${singleton_address} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
+  rm -rf ${work_dir}
 
 else
   echo "No Job"
