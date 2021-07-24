@@ -56,5 +56,6 @@ ENV plots_dir "/plots"
 WORKDIR /chia-blockchain
 ADD ./entrypoint.sh entrypoint.sh
 RUN chmod +x entrypoint.sh
+RUN echo ". activate" >> ~/.bashrc
 
 ENTRYPOINT ["./entrypoint.sh"]
