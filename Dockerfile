@@ -8,15 +8,16 @@ RUN git config --global user.email "you@example.com"
 RUN git config --global user.name "Your Name"
 
 WORKDIR /
-RUN git clone https://github.com/Chia-Network/chia-blockchain.git --recurse-submodules
+RUN git clone https://github.com/Chia-Network/chia-blockchain.git
 WORKDIR /chia-blockchain
-RUN git checkout 89f7a4b3d6329493cd2b4bc5f346a819c99d3e7b
+#RUN git checkout 89f7a4b3d6329493cd2b4bc5f346a819c99d3e7b
+RUN git submodule update --init
 RUN sh install.sh
 
 WORKDIR /
 RUN git clone https://github.com/madMAx43v3r/chia-plotter.git
 WORKDIR /chia-plotter
-RUN git checkout pool-puzzles
+#RUN git checkout pool-puzzles
 RUN git submodule update --init
 RUN ./make_devel.sh
 RUN ./build/chia_plot --help
@@ -31,7 +32,7 @@ EXPOSE 8555
 ARG DEBIAN_FRONTEND=noninteractive
 ARG chia_ver=main
 RUN apt update
-RUN apt install -y bash python3 ca-certificates git openssl python3-venv python3-distutils apt lsb-release sudo systemctl bc libsodium23
+RUN apt install -y bash python3 ca-certificates git openssl python3-venv python3-distutils apt lsb-release sudo systemctl bc libsodium23 apt-utils
 
 COPY --from=builder /chia-blockchain /chia-blockchain
 COPY --from=builder /chia-plotter/build/chia_plot /chia-blockchain/venv/bin/
@@ -52,6 +53,8 @@ ENV tmp_dir=/work
 ENV ca_dir=/run/secrets/
 ENV key_file=/run/secrets/chiakey
 ENV plots_dir "/plots"
+ENV chia "chia"
+ENV conf_dir ".chia"
 
 WORKDIR /chia-blockchain
 ADD ./entrypoint.sh entrypoint.sh
