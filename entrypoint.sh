@@ -29,7 +29,7 @@ fi
 if [ ${mode} = "master" ];then
   trap 'chia stop farmer' TERM INT STOP ERR
   ${chia} init --create-certs ${ca_dir}
-  ${chia} keys add -f ${key_file}
+  #${chia} keys add -f ${key_file}
   ${chia} start node
   ${chia} start farmer-only
   ${chia} start wallet-only
