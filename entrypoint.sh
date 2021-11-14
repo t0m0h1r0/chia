@@ -1,49 +1,36 @@
 #!/bin/bash
 echo HOSTNAME `hostname`
 sleep_time=10
-${chia}='chia'
+chia="chia"
 
 . activate
 
-if ${update}; then
-  git checkout pools.dev
-  git pull
-  sh install.sh
-fi
-
-${chia} init
-${chia} configure --log-level INFO
-if ${testnet}; then
-  ${chia} configure --testnet true
-  ${chia} configure --set-node-introducer testnet-node.chia.net:58444
-fi
-
-sed -i 's/localhost/127.0.0.1/g' /root/${conf_dir}/mainnet/config/config.yaml
-if ${verbose}; then
-  sed -i 's/log_stdout: false/log_stdout: true/g' /root/${conf_dir}/mainnet/config/config.yaml
-fi
-if [[ -n ${plots_dir} ]];then
-  ${chia} plots add -d ${plots_dir}
-fi
+#sed -i 's/localhost/127.0.0.1/g' /root/${conf_dir}/mainnet/config/config.yaml
 
 if [ ${mode} = "master" ];then
-  trap 'chia stop farmer' TERM INT STOP ERR
+  ${chia} init
+  cp /root/${conf_dir}/mainnet/config/_config.yaml /root/${conf_dir}/mainnet/config/config.yaml
   ${chia} init --create-certs ${ca_dir}
-  ${chia} keys add -f ${key_file}
   ${chia} start node
   ${chia} start farmer-only
   ${chia} start wallet-only
+  trap 'chia stop farmer' TERM INT STOP ERR
   while true;do sleep ${sleep_time};done
 
 elif [ ${mode} = "harvester" ];then
   sleep 10
+  ${chia} init
+  cp /root/${conf_dir}/mainnet/config/_config.yaml /root/${conf_dir}/mainnet/config/config.yaml
   ${chia} init --create-certs ${ca_dir}
   ${chia} configure --set-farmer-peer ${farmer_address}:${farmer_port}
-  trap 'chia stop harvester' TERM INT STOP ERR
+  ${chia} plots add -d ${plots_dir}
   ${chia} start harvester
+  trap 'chia stop harvester' TERM INT STOP ERR
   while true;do sleep ${sleep_time};done
 
 elif [ ${mode} = "plotter" ];then
+  ${chia} init
+  ${chia} configure --log-level INFO
   trap 'rm -rf ${work_dir}' TERM INT STOP ERR
   work_dir=${tmp_dir}/`hostname`
   mkdir ${work_dir}
