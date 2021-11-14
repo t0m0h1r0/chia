@@ -5,12 +5,14 @@ chia="chia"
 
 . activate
 
-#sed -i 's/localhost/127.0.0.1/g' /root/${conf_dir}/mainnet/config/config.yaml
-
 if [ ${mode} = "master" ];then
   ${chia} init
-  cp /root/${conf_dir}/mainnet/config/_config.yaml /root/${conf_dir}/mainnet/config/config.yaml
   ${chia} init --create-certs ${ca_dir}
+  cp /root/${conf_dir}/mainnet/config/_config.yaml /root/${conf_dir}/mainnet/config/config.yaml
+  ${chia} keys add -f ${key_file}
+  ${chia} configure --log-level INFO
+  sed -i 's/localhost/127.0.0.1/g' /root/${conf_dir}/mainnet/config/config.yaml
+  sed -i 's/log_stdout: false/log_stdout: true/g' /root/${conf_dir}/mainnet/config/config.yaml
   ${chia} start node
   ${chia} start farmer-only
   ${chia} start wallet-only
@@ -20,10 +22,14 @@ if [ ${mode} = "master" ];then
 elif [ ${mode} = "harvester" ];then
   sleep 10
   ${chia} init
-  cp /root/${conf_dir}/mainnet/config/_config.yaml /root/${conf_dir}/mainnet/config/config.yaml
   ${chia} init --create-certs ${ca_dir}
+  cp /root/${conf_dir}/mainnet/config/_config.yaml /root/${conf_dir}/mainnet/config/config.yaml
+  ${chia} keys add -f ${key_file}
   ${chia} configure --set-farmer-peer ${farmer_address}:${farmer_port}
+  ${chia} configure --log-level INFO
   ${chia} plots add -d ${plots_dir}
+  sed -i 's/localhost/127.0.0.1/g' /root/${conf_dir}/mainnet/config/config.yaml
+  sed -i 's/log_stdout: false/log_stdout: true/g' /root/${conf_dir}/mainnet/config/config.yaml
   ${chia} start harvester
   #trap 'chia stop harvester' TERM INT STOP ERR
   while true;do sleep ${sleep_time};done
