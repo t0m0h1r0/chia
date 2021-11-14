@@ -14,7 +14,7 @@ if [ ${mode} = "master" ];then
   ${chia} start node
   ${chia} start farmer-only
   ${chia} start wallet-only
-  trap 'chia stop farmer' TERM INT STOP ERR
+  #trap 'chia stop farmer' TERM INT STOP ERR
   while true;do sleep ${sleep_time};done
 
 elif [ ${mode} = "harvester" ];then
@@ -25,7 +25,7 @@ elif [ ${mode} = "harvester" ];then
   ${chia} configure --set-farmer-peer ${farmer_address}:${farmer_port}
   ${chia} plots add -d ${plots_dir}
   ${chia} start harvester
-  trap 'chia stop harvester' TERM INT STOP ERR
+  #trap 'chia stop harvester' TERM INT STOP ERR
   while true;do sleep ${sleep_time};done
 
 elif [ ${mode} = "plotter" ];then
