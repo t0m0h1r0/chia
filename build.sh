@@ -16,7 +16,6 @@ docker buildx create \
 	--use --name multi-arch
 docker buildx build \
 	--platform linux/amd64,linux/arm64 \
-	--secret=id=chiakey,src=${KEY_FILE}  \
 	--build-arg chia_ver="${1:-latest}" \
 	-t ${ADDR}:${PORT}/chia:${1:-latest} \
 	-t ${ADDR}:${PORT}/chia:latest \
