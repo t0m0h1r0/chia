@@ -2,7 +2,7 @@
 #run a command below
 
 ARCH=(arm64 amd64)
-ADDR="nuc1"
+ADDR="reg1"
 PORT="5000"
 KEY_FILE="./key"
 TIME=`date "+%Y%m%d%H%M%S"`
