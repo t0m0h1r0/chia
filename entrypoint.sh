@@ -51,7 +51,8 @@ elif [ ${mode} = "plotter-fast" ];then
   #for I in `seq ${loop}`
   #  do rm ${plots_dir}/`ls /plots/|sort|head -n1`
   #done
-  chia_plot -f ${farmer_key} -c ${singleton_address} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
+  #chia_plot -f ${farmer_key} -c ${singleton_address} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
+  chia_plot -f ${farmer_key} -c ${singleton_address} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread} -2 ${ram_dir}/
   rm -rf ${work_dir}
 
 else

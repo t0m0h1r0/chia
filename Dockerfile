@@ -50,6 +50,7 @@ ENV thread=2
 ENV testnet=false
 ENV update=false
 ENV tmp_dir=/work
+ENV ram_dir=/ram
 ENV ca_dir=/run/secrets/
 ENV key_file=/run/secrets/chiakey
 ENV plots_dir "/plots"
