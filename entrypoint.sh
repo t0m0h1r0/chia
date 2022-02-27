@@ -16,7 +16,7 @@ if [ ${mode} = "master" ];then
   ${chia} start node
   ${chia} start farmer-only
   ${chia} start wallet-only
-  #trap 'chia stop farmer' TERM INT STOP ERR
+  trap 'chia stop all' TERM INT STOP ERR
   while true;do sleep ${sleep_time};done
 
 elif [ ${mode} = "harvester" ];then
@@ -31,7 +31,7 @@ elif [ ${mode} = "harvester" ];then
   sed -i 's/localhost/127.0.0.1/g' /root/${conf_dir}/mainnet/config/config.yaml
   sed -i 's/log_stdout: false/log_stdout: true/g' /root/${conf_dir}/mainnet/config/config.yaml
   ${chia} start harvester
-  #trap 'chia stop harvester' TERM INT STOP ERR
+  trap 'chia stop all' TERM INT STOP ERR
   while true;do sleep ${sleep_time};done
 
 elif [ ${mode} = "plotter" ];then
@@ -48,10 +48,6 @@ elif [ ${mode} = "plotter-fast" ];then
   trap 'rm -rf ${work_dir}' TERM INT STOP ERR
   work_dir=${tmp_dir}/`hostname`
   mkdir ${work_dir}
-  #for I in `seq ${loop}`
-  #  do rm ${plots_dir}/`ls /plots/|sort|head -n1`
-  #done
-  #chia_plot -f ${farmer_key} -c ${singleton_address} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread}
   chia_plot -f ${farmer_key} -c ${singleton_address} -t ${work_dir}/ -d ${plots_dir}/ -n ${loop} -r ${thread} -2 ${ram_dir}/
   rm -rf ${work_dir}
 

@@ -11,6 +11,7 @@ WORKDIR /
 RUN git clone https://github.com/Chia-Network/chia-blockchain.git
 WORKDIR /chia-blockchain
 #RUN git checkout 89f7a4b3d6329493cd2b4bc5f346a819c99d3e7b
+#RUN git checkout 1.2.11
 RUN git submodule update --init
 RUN sh install.sh
 
