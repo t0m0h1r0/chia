@@ -1,4 +1,4 @@
-FROM ubuntu:hirsute AS builder
+FROM ubuntu:jammy AS builder
 USER root
 ARG chia_ver=main
 ARG DEBIAN_FRONTEND=noninteractive
@@ -24,7 +24,7 @@ RUN ./make_devel.sh
 RUN ./build/chia_plot --help
 
 ####################
-FROM ubuntu:hirsute
+FROM ubuntu:jammy
 USER root
 EXPOSE 8444
 EXPOSE 8447
