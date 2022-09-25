@@ -2,7 +2,7 @@
 #run a command below
 
 ARCH=(amd64)
-ADDR="reg1"
+ADDR="cache"
 PORT="5000"
 KEY_FILE="./key"
 TIME=`date "+%Y%m%d%H%M%S"`

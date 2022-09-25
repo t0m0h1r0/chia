@@ -9,7 +9,7 @@ if [ ${mode} = "master" ];then
   ${chia} init
   ${chia} init --create-certs ${ca_dir}
   cp /root/${conf_dir}/mainnet/config/_config.yaml /root/${conf_dir}/mainnet/config/config.yaml
-  ${chia} keys add -f ${key_file}
+  ${chia} keys add -f ${key_file} -l '.'
   ${chia} configure --log-level INFO
   sed -i 's/localhost/127.0.0.1/g' /root/${conf_dir}/mainnet/config/config.yaml
   sed -i 's/log_stdout: false/log_stdout: true/g' /root/${conf_dir}/mainnet/config/config.yaml
@@ -24,7 +24,7 @@ elif [ ${mode} = "harvester" ];then
   ${chia} init
   ${chia} init --create-certs ${ca_dir}
   cp /root/${conf_dir}/mainnet/config/_config.yaml /root/${conf_dir}/mainnet/config/config.yaml
-  ${chia} keys add -f ${key_file}
+  #${chia} keys add -f ${key_file} -l '.'
   ${chia} configure --set-farmer-peer ${farmer_address}:${farmer_port}
   ${chia} configure --log-level INFO
   ${chia} plots add -d ${plots_dir}

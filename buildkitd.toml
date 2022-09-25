@@ -4,6 +4,6 @@ root = "/var/lib/buildkit"
 # insecure-entitlements allows insecure entitlements, disabled by default.
 insecure-entitlements = [ "network.host", "security.insecure" ]
 
-[registry."reg1:5000"]
+[registry."cache:5000"]
     http = true
     insecure = true
