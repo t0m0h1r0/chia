@@ -65,7 +65,7 @@ spec:
             - name: secret-ca
               mountPath: /chia-ca
             - name: chia-database
-              mountPath: /chia-data
+              mountPath: /chia-data/db
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
