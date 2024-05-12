@@ -6,6 +6,7 @@ spec:
   replicas: 5
   selector:
     matchLabels:
+      k8s.chia.net/provenance: ChiaHarvester
       app: mainnet-harvester
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
@@ -27,6 +28,7 @@ spec:
   template:
     metadata:
       labels:
+        k8s.chia.net/provenance: ChiaHarvester
         app: mainnet-harvester
     spec:
       volumes:
@@ -70,6 +72,7 @@ spec:
               value: '1'
             - name: log_level
               value: INFO
+          resources: {}
           volumeMounts:
             - name: secret-ca
               mountPath: /chia-ca
