@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: chiakey
+data:
+  key.txt: YXVndXN0IHlvdW5nIHNwZWxsIHJpY2UgbGlnaHQgcGFudGhlciBsZW5kIG1lbW9yeSBhYmFuZG9uIHBvd2RlciBleGl0IHRyaWdnZXIgbWFpZCBjbGljayB1bmlmb3JtIHdlYXRoZXIgcmV0aXJlIGluY3JlYXNlIHRydXRoIGdsb29tIGRyb3AgY2hpY2tlbiBwb3ZlcnR5IGNvcmU=
