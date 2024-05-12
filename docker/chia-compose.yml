@@ -1,0 +1,116 @@
+version: "3.7"
+networks:
+  chia_network:
+    driver: overlay
+    attachable: true
+
+secrets:
+  chiakey:
+    external: true
+  chia_ca.crt:
+    external: true
+  chia_ca.key:
+    external: true
+  private_ca.crt:
+    external: true
+  private_ca.key:
+    external: true
+
+services:
+  master:
+    image: 192.168.10.40:5050/chia:latest
+    volumes:
+    - /work/chia/blockchain/db:/root/.chia/mainnet/db
+    - /work/chia/blockchain/wallet:/root/.chia/mainnet/wallet
+    environment:
+      mode: master
+      verbose: "true"
+      farmer_address: chia_master
+    restart: always
+    stop_grace_period: 1m
+    deploy:
+      mode: global
+      placement:
+        constraints:
+        - node.labels.database == true
+    networks:
+    - chia_network
+    ports:
+    - "8444:8444"
+    - "8447:8447"
+    secrets:
+    - chiakey
+    - chia_ca.crt
+    - chia_ca.key
+    - private_ca.crt
+    - private_ca.key
+
+
+  harvester:
+    image: 192.168.10.40:5050/chia:latest
+    volumes:
+    - /root/plots:/plots
+    environment:
+      mode: harvester
+      farmer_address: tasks.master
+      verbose: "true"
+    restart: always
+    stop_grace_period: 1m
+    deploy:
+      mode: global
+      placement:
+        constraints:
+        - node.labels.storage == true
+    depends_on:
+    - master
+    networks:
+    - chia_network
+    secrets:
+    - chiakey
+    - chia_ca.crt
+    - chia_ca.key
+    - private_ca.crt
+    - private_ca.key
+    
+  plotter:
+    image: 192.168.10.40:5050/chia:latest
+    volumes:
+    - plotter_work:/work
+    - plotter_plots:/plots
+    environment:
+      mode: plotter
+      loop: 1
+      verbose: "true"
+      delay: 0
+    networks:
+    - chia_network
+    restart: "no"
+    stop_grace_period: 7h
+    secrets:
+    - chiakey
+    - chia_ca.crt
+    - chia_ca.key
+    - private_ca.crt
+    - private_ca.key
+    deploy:
+      mode: replicated
+      replicas: 0
+      placement:
+        constraints:
+        - node.labels.compute == true
+    #3000s毎に順に起動するなら下記コマンドを実行
+    #for I in `seq 1 5`;do docker service scale Chia_plotter=${I};sleep 3000;done 
+        
+volumes:
+  plotter_plots:
+    driver: local
+    driver_opts:
+      type: cifs
+      o: "username=chia,password=yC82jtMbn,rw,vers=3.0"
+      device: //192.168.10.100/chia/plots
+  plotter_work:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /work/
