@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mainnet-harvester
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: mainnet-harvester
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  volumeClaimTemplates:
+  - metadata:
+      name: chia-plots
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      volumeMode: Filesystem
+      storageClassName: iscsi-static
+      resources:
+        requests:
+          storage: 1Gi
+      selector:
+        matchLabels:
+          storagetype: plots
+  template:
+    metadata:
+      labels:
+        app: mainnet-harvester
+    spec:
+      volumes:
+        - name: secret-ca
+          secret:
+            secretName: mainnet-ca
+            defaultMode: 420
+        - name: chiaroot
+          emptyDir: {}
+      containers:
+        - name: chia
+          image: ghcr.io/chia-network/chia:latest
+          ports:
+            - name: peers
+              containerPort: 8448
+              protocol: TCP
+            - name: rpc
+              containerPort: 8560
+              protocol: TCP
+          env:
+            - name: service
+              value: harvester
+            - name: CHIA_ROOT
+              value: /chia-data
+            - name: ca
+              value: /chia-ca
+            - name: TZ
+              value: UTC
+            - name: recursive_plot_scan
+              value: 'true'
+            - name: farmer_address
+              value: 'mainnet-farmer'
+            - name: farmer_port
+              value: '8447'
+            - name: parallel_decompressor_count
+              value: '1'
+            - name: decompressor_thread_count
+              value: '1'
+            - name: log_level
+              value: INFO
+          resources: {}
+          volumeMounts:
+            - name: secret-ca
+              mountPath: /chia-ca
+            - name: chiaroot
+              mountPath: /chia-data
+            - name: chia-plots
+              readOnly: true
+              mountPath: /plots
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

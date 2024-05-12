@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mainnet-node
+  labels:
+    app: mainnet-node
+spec:
+  ports:
+    - name: peers
+      protocol: TCP
+      port: 8444
+    - name: rpc
+      protocol: TCP
+      port: 8555
+  selector:
+    app: mainnet-node
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mainnet-farmer
+  labels:
+    app: mainnet-farmer
+spec:
+  ports:
+    - name: farmer-peers
+      protocol: TCP
+      port: 8447
+    - name: farmer-rpc
+      protocol: TCP
+      port: 8559
+    - name: wallet-peers
+      protocol: TCP
+      port: 8449
+    - name: wallet-rpc
+      protocol: TCP
+      port: 9256
+  selector:
+    app: mainnet-farmer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mainnet-harvester
+  labels:
+    app: mainnet-harvester
+spec:
+  ports:
+    - name: peers
+      protocol: TCP
+      port: 8448
+    - name: rpc
+      protocol: TCP
+      port: 8560
+  selector:
+    app: mainnet-harvester

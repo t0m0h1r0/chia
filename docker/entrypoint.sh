@@ -15,7 +15,6 @@ if [ ${mode} = "master" ];then
   sed -i 's/log_stdout: false/log_stdout: true/g' /root/${conf_dir}/mainnet/config/config.yaml
   ${chia} start node
   ${chia} start farmer-only
-<<<<<<< HEAD
   ${chia} start wallet-only
   trap 'chia stop farmer' TERM INT STOP ERR
   while true;do sleep ${sleep_time};done

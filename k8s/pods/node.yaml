@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mainnet-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mainnet-node
+  volumeClaimTemplates:
+    - metadata:
+        name: chia-database
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        volumeMode: Filesystem
+        #storageClassName: iscsi-static
+        resources:
+          requests:
+            storage: 250Gi
+              #        selector:
+              #          matchLabels:
+              #            storagetype: database
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mainnet-node
+    spec:
+      volumes:
+        - name: secret-ca
+          secret:
+            secretName: mainnet-ca
+            defaultMode: 420
+      containers:
+        - name: chia
+          image: ghcr.io/chia-network/chia:latest
+          ports:
+            - name: peers
+              containerPort: 8444
+              protocol: TCP
+            - name: rpc
+              containerPort: 8555
+              protocol: TCP
+          env:
+            - name: service
+              value: node
+            - name: CHIA_ROOT
+              value: /chia-data
+            - name: keys
+              value: none
+            - name: ca
+              value: /chia-ca
+            - name: TZ
+              value: UTC
+            - name: log_level
+              value: INFO
+          resources: {}
+          volumeMounts:
+            - name: secret-ca
+              mountPath: /chia-ca
+            - name: chia-database
+              mountPath: /chia-data/db
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+

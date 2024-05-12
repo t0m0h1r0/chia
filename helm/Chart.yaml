@@ -1,0 +1,6 @@
+apiVersion: v2
+name: chia-network
+description: A Helm chart for Chia Network components
+version: 0.1.0
+appVersion: "latest"
+
