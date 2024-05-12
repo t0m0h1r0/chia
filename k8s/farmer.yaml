@@ -6,12 +6,10 @@ spec:
   selector:
     matchLabels:
       app: mainnet-farmer
-      k8s.chia.net/provenance: ChiaFarmer
   template:
     metadata:
       labels:
         app: mainnet-farmer
-        k8s.chia.net/provenance: ChiaFarmer
     spec:
       containers:
       - name: farmer
