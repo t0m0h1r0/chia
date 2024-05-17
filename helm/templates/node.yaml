@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mainnet-node
+  labels:
+    app: mainnet-node
+spec:
+  replicas: {{ .Values.replicaCount.node }}
+  selector:
+    matchLabels:
+      app: mainnet-node
+      k8s.chia.net.provenance: ChiaNode
+  volumeClaimTemplates:
+  - metadata:
+      name: chia-database
+    spec:
+      accessModes: {{ .Values.persistence.database.accessModes }}
+      storageClassName: {{ .Values.persistence.database.storageClassName }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.database.size }}
+      selector:
+        matchLabels:
+          storagetype: database
+  template:
+    metadata:
+      labels:
+        app: mainnet-node
+        k8s.chia.net.provenance: ChiaNode
+    spec:
+      containers:
+      - name: chia
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        env:
+        - name: service
+          value: 'node'
+        - name: CHIA_ROOT
+          value: "{{ .Values.env.chia_root }}"
+        - name: keys
+          value: 'none'
+        - name: ca
+          value: "{{ .Values.env.ca }}"
+        - name: TZ
+          value: "{{ .Values.env.TZ }}"
+        - name: log_level
+          value: "{{ .Values.env.log_level }}"
+        ports:
+        {{- range .Values.services.node.ports }}
+        - containerPort: {{ .port }}
+          name: {{ .name }}
+          protocol: TCP
+        {{- end }}
+        volumeMounts:
+        - mountPath: /chia-ca
+          name: secret-ca
+        - mountPath: /chia-data
+          name: chia-database
+      volumes:
+      - name: secret-ca
+        secret:
+          secretName: {{ .Values.secrets.ca }}
+

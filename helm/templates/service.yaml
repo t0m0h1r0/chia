@@ -1,0 +1,20 @@
+{{- $root := . -}}
+{{- range $serviceName, $service := .Values.services }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: mainnet-{{ $serviceName }}
+  labels:
+    app: mainnet-{{ $serviceName }}
+spec:
+  ports:
+  {{- range $service.ports }}
+    - name: {{ .name }}
+      protocol: TCP
+      port: {{ .port }}
+  {{- end }}
+  selector:
+    app: mainnet-{{ $serviceName }}
+---
+{{- end }}
+

@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mainnet-farmer
+  labels:
+    app: mainnet-farmer
+spec:
+  selector:
+    matchLabels:
+      app: mainnet-farmer
+      k8s.chia.net/provenance: ChiaFarmer
+  template:
+    metadata:
+      labels:
+        app: mainnet-farmer
+        k8s.chia.net/provenance: ChiaFarmer
+    spec:
+      containers:
+      - name: farmer
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        env:
+        - name: service
+          value: 'farmer-only'
+        - name: CHIA_ROOT
+          value: "{{ .Values.env.chia_root }}"
+        - name: ca
+          value: "{{ .Values.env.ca }}"
+        - name: TZ
+          value: "{{ .Values.env.TZ }}"
+        - name: keys
+          value: "{{ .Values.env.keys }}"
+        - name: full_node_peer
+          value: "{{ .Values.env.full_node_peer }}"
+        - name: log_level
+          value: "{{ .Values.env.log_level }}"
+        ports:
+        {{- range .Values.services.farmer.ports }}
+        - containerPort: {{ .port }}
+          name: {{ .name }}
+          protocol: TCP
+        {{- end }}
+        volumeMounts:
+        - mountPath: /chia-ca
+          name: secret-ca
+        - mountPath: /key
+          name: key
+        - mountPath: /chia-data
+          name: chiaroot
+      - name: wallet
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        env:
+        - name: service
+          value: 'wallet'
+        - name: CHIA_ROOT
+          value: "{{ .Values.env.chia_root }}"
+        - name: ca
+          value: "{{ .Values.env.ca }}"
+        - name: TZ
+          value: "{{ .Values.env.TZ }}"
+        - name: keys
+          value: "{{ .Values.env.keys }}"
+        - name: full_node_peer
+          value: "{{ .Values.env.full_node_peer }}"
+        - name: log_level
+          value: "{{ .Values.env.log_level }}"
+        ports:
+        {{- range .Values.services.farmer.ports | where "name" "wallet-peers" }}
+        - containerPort: {{ .port }}
+          name: {{ .name }}
+          protocol: TCP
+        {{- end }}
+        {{- range .Values.services.farmer.ports | where "name" "wallet-rpc" }}
+        - containerPort: {{ .port }}
+          name: {{ .name }}
+          protocol: TCP
+        {{- end }}
+        volumeMounts:
+        - mountPath: /chia-ca
+          name: secret-ca
+        - mountPath: /key
+          name: key
+        - mountPath: /chia-data
+          name: chiaroot
+      volumes:
+      - name: secret-ca
+        secret:
+          secretName: {{ .Values.secrets.ca }}
+      - name: key
+        secret:
+          secretName: {{ .Values.secrets.key }}
+      - name: chiaroot
+        emptyDir: {}
+
