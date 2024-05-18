@@ -1,0 +1,7 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: qnap-sc
+provisioner: csi.trident.qnap.io
+parameters:
+allowVolumeExpansion: true
