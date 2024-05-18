@@ -6,9 +6,6 @@ metadata:
     app: mainnet-node
 spec:
   ports:
-    - name: daemon
-      protocol: TCP
-      port: 55400
     - name: peers
       protocol: TCP
       port: 8444
@@ -26,9 +23,6 @@ metadata:
     app: mainnet-farmer
 spec:
   ports:
-    - name: daemon
-      protocol: TCP
-      port: 55400
     - name: farmer-peers
       protocol: TCP
       port: 8447
@@ -52,9 +46,6 @@ metadata:
     app: mainnet-harvester
 spec:
   ports:
-    - name: daemon
-      protocol: TCP
-      port: 55400
     - name: peers
       protocol: TCP
       port: 8448
@@ -72,9 +63,6 @@ metadata:
     app: mainnet-wallet
 spec:
   ports:
-    - name: daemon
-      protocol: TCP
-      port: 55400
     - name: peers
       protocol: TCP
       port: 8449

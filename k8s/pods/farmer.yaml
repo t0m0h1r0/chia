@@ -6,12 +6,10 @@ spec:
   selector:
     matchLabels:
       app: mainnet-farmer
-      k8s.chia.net/provenance: ChiaFarmer
   template:
     metadata:
       labels:
         app: mainnet-farmer
-        k8s.chia.net/provenance: ChiaFarmer
     spec:
       containers:
       - name: farmer
@@ -32,9 +30,6 @@ spec:
         - name: log_level
           value: INFO
         ports:
-        - containerPort: 55400
-          name: farmer-daemon
-          protocol: TCP
         - containerPort: 8447
           name: farmer-peers
           protocol: TCP
