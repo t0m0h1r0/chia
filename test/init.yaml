@@ -1,38 +1,42 @@
-apiVersion: v1
-kind: Pod
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: chia-init
-  labels:
-    app: chia
+  name: chia-ca-init
 spec:
-  serviceAccountName: chia-service-account  # Ensure this service account has the necessary permissions
-  initContainers:
-  - name: chia-init-container
-    image: ghcr.io/chia-network/chia
-    command:
-      - /bin/sh
-      - -c
-      - |
-        chia init && chmod -R a+r /mnt/chia
-    env:
-    - name: CHIA_ROOT
-      value: /mnt/chia
-    volumeMounts:
-    - name: chia-config
-      mountPath: /mnt/chia
-  containers:
-  - name: kubectl
-    image: bitnami/kubectl:latest  # Use a container with kubectl installed
-    command:
-      - /bin/sh
-      - -c
-      - |
-        kubectl create secret generic mainnet-ca --from-file=/mnt/chia/config/ssl/ca/chia_ca.crt --from-file=/mnt/chia/config/ssl/ca/chia_ca.key --from-file=/mnt/chia/config/ssl/ca/private_ca.crt --from-file=/mnt/chia/config/ssl/ca/private_ca.key 
-        sleep 3600  # Keep the sidecar running for inspection
-    volumeMounts:
-    - name: chia-config
-      mountPath: /mnt/chia
-  volumes:
-  - name: chia-config
-    emptyDir: {}
+  template:
+    metadata:
+      name: chia-ca-init
+      labels:
+        app: chia
+    spec:
+      serviceAccountName: chia-service-account  # Ensure this service account has the necessary permissions
+      initContainers:
+      - name: chia-init-container
+        image: ghcr.io/chia-network/chia
+        command:
+          - /bin/sh
+          - -c
+          - |
+            chia init && chmod -R a+r /mnt/chia
+        env:
+        - name: CHIA_ROOT
+          value: /mnt/chia
+        volumeMounts:
+        - name: chia-config
+          mountPath: /mnt/chia
+      containers:
+      - name: kubectl
+        image: bitnami/kubectl:latest  # Use a container with kubectl installed
+        command:
+          - /bin/sh
+          - -c
+          - |
+            kubectl create secret generic mainnet-ca --from-file=/mnt/chia/config/ssl/ca/chia_ca.crt --from-file=/mnt/chia/config/ssl/ca/chia_ca.key --from-file=/mnt/chia/config/ssl/ca/private_ca.crt --from-file=/mnt/chia/config/ssl/ca/private_ca.key 
+        volumeMounts:
+        - name: chia-config
+          mountPath: /mnt/chia
+      volumes:
+      - name: chia-config
+        emptyDir: {}
+      restartPolicy: OnFailure
 
