@@ -54,20 +54,3 @@ spec:
       port: 8560
   selector:
     app: mainnet-harvester
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mainnet-wallet
-  labels:
-    app: mainnet-wallet
-spec:
-  ports:
-    - name: peers
-      protocol: TCP
-      port: 8449
-    - name: rpc
-      protocol: TCP
-      port: 9256
-  selector:
-    app: mainnet-wallet
