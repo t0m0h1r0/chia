@@ -2,7 +2,7 @@
   "version": 1,
   "storageDriverName": "qnap-iscsi",
   "backendName": "qnap-sc",
-  "storageAddress": "192.168.1.56",
+  "storageAddress": "192.168.1.112",
   "username": "k8s",
   "password": "MShxir93p",
   "debugTraceFlags": {
