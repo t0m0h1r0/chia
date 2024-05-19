@@ -11,7 +11,7 @@ spec:
     - ReadWriteOnce
   storageClassName: iscsi-static
   iscsi:
-    targetPortal: 192.168.1.56
+    targetPortal: 192.168.1.112
     iqn: iqn.2004-04.com.qnap:ts-832px:iscsi.database.576194
     lun: 0
     fsType: 'ext4'
