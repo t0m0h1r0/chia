@@ -82,11 +82,9 @@ spec:
       volumes:
       - name: secret-ca
         secret:
-          defaultMode: 420
           secretName: mainnet-ca
       - name: key
         secret:
-          defaultMode: 420
           secretName: chiakey
       - emptyDir: {}
         name: chiaroot

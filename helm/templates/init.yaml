@@ -1,42 +1,41 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Values.job.name }}
+  name: chia-ca-init
 spec:
   template:
     metadata:
-      name: {{ .Values.job.name }}
+      name: chia-ca-init
       labels:
         app: chia
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       initContainers:
-      - name: chia-init-container
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-        command:
-          - /bin/sh
-          - -c
-          - |
-            chia init && chmod -R a+r /mnt/chia
-        env:
-        - name: CHIA_ROOT
-          value: /mnt/chia
-        volumeMounts:
-        - name: chia-config
-          mountPath: /mnt/chia
+        - name: chia-init-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              chia init && chmod -R a+r /mnt/chia
+          env:
+            - name: CHIA_ROOT
+              value: /mnt/chia
+          volumeMounts:
+            - name: chia-config
+              mountPath: /mnt/chia
       containers:
-      - name: kubectl
-        image: {{ .Values.job.image.kubectl }}
-        command:
-          - /bin/sh
-          - -c
-          - |
-            kubectl create secret generic {{ .Values.secrets.ca }} --from-file=/mnt/chia/config/ssl/ca/chia_ca.crt --from-file=/mnt/chia/config/ssl/ca/chia_ca.key --from-file=/mnt/chia/config/ssl/ca/private_ca.crt --from-file=/mnt/chia/config/ssl/ca/private_ca.key
-        volumeMounts:
-        - name: chia-config
-          mountPath: /mnt/chia
+        - name: kubectl
+          image: bitnami/kubectl:latest
+          command:
+            - /bin/sh
+            - -c
+            - kubectl create secret generic mainnet-ca --from-file=/mnt/chia/config/ssl/ca/chia_ca.crt --from-file=/mnt/chia/config/ssl/ca/chia_ca.key --from-file=/mnt/chia/config/ssl/ca/private_ca.crt --from-file=/mnt/chia/config/ssl/ca/private_ca.key
+          volumeMounts:
+            - name: chia-config
+              mountPath: /mnt/chia
       volumes:
-      - name: chia-config
-        emptyDir: {}
+        - name: chia-config
+          emptyDir: {}
       restartPolicy: OnFailure
 

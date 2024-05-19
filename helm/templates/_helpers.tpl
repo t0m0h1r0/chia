@@ -1,16 +1,8 @@
-{{- define "chia.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- .Values.fullnameOverride | quote -}}
-{{- else -}}
-{{- .Chart.Name | quote -}}
-{{- end -}}
+{{- define "chia.labels" -}}
+app: {{ .Chart.Name }}
 {{- end -}}
 
-{{- define "chia.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-{{- default (include "chia.fullname" .) .Values.serviceAccount.name -}}
-{{- else -}}
-{{- .Values.serviceAccount.name -}}
-{{- end -}}
+{{- define "chia.selectorLabels" -}}
+app: {{ .Chart.Name }}
 {{- end -}}
 

@@ -11,7 +11,7 @@ spec:
     - ReadWriteOnce
   storageClassName: iscsi-static
   iscsi:
-    targetPortal: 192.168.1.17
+    targetPortal: 192.168.1.110
     iqn: iqn.2024-05.localdomain.omv1:target0
     lun: 1
     fsType: 'xfs'
@@ -30,7 +30,7 @@ spec:
     - ReadWriteOnce
   storageClassName: iscsi-static
   iscsi:
-    targetPortal: 192.168.1.17
+    targetPortal: 192.168.1.110
     iqn: iqn.2024-05.localdomain.omv1:target1
     lun: 1
     fsType: 'xfs'
@@ -49,7 +49,7 @@ spec:
     - ReadWriteOnce
   storageClassName: iscsi-static
   iscsi:
-    targetPortal: 192.168.1.17
+    targetPortal: 192.168.1.110
     iqn: iqn.2024-05.localdomain.omv1:target2
     lun: 1
     fsType: 'xfs'
@@ -68,7 +68,7 @@ spec:
     - ReadWriteOnce
   storageClassName: iscsi-static
   iscsi:
-    targetPortal: 192.168.1.102
+    targetPortal: 192.168.1.111
     iqn: iqn.2004-04.com.qnap:ts-832x:iscsi.target1.506276
     lun: 1
     fsType: 'xfs'
@@ -87,7 +87,7 @@ spec:
     - ReadWriteOnce
   storageClassName: iscsi-static
   iscsi:
-    targetPortal: 192.168.1.56
+    targetPortal: 192.168.1.112
     iqn: iqn.2004-04.com.qnap:ts-832px:iscsi.target.576194
     lun: 1
     fsType: 'xfs'
