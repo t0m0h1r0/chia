@@ -14,13 +14,13 @@ spec:
         accessModes:
           - ReadWriteOnce
         volumeMode: Filesystem
-        #storageClassName: iscsi-static
+        storageClassName: iscsi-static
         resources:
           requests:
             storage: 250Gi
-              #        selector:
-              #          matchLabels:
-              #            storagetype: database
+        selector:
+          matchLabels:
+            storagetype: database
   template:
     metadata:
       creationTimestamp: null

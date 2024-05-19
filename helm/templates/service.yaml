@@ -1,20 +1,20 @@
-{{- $root := . -}}
-{{- range $serviceName, $service := .Values.services }}
+{{- range $service, $config := .Values.service }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: mainnet-{{ $serviceName }}
+  name: {{ $service }}
   labels:
-    app: mainnet-{{ $serviceName }}
+    app: {{ $service }}
 spec:
-  ports:
-  {{- range $service.ports }}
-    - name: {{ .name }}
-      protocol: TCP
-      port: {{ .port }}
-  {{- end }}
+  type: {{ $.Values.service.type }}
   selector:
-    app: mainnet-{{ $serviceName }}
+    app: {{ $service }}
+  ports:
+  {{- range $port := $config.ports }}
+    - name: {{ $port.name }}
+      port: {{ $port.port }}
+      protocol: {{ $port.protocol | default "TCP" }}
+  {{- end }}
 ---
 {{- end }}
 
