@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mainnet-farmer2
+  name: mainnet-farmer
 spec:
   replicas: 1
   selector:
@@ -90,10 +90,12 @@ spec:
           protocol: TCP
         resources: {}
         volumeMounts:
-        - mountPath: /chia-ca
-          name: secret-ca
-        - mountPath: /key
-          name: key
-        - mountPath: /chia-data/wallet
-          name: chia-wallet
+        - name: secret-ca
+          mountPath: /chia-ca
+        - name: key
+          mountPath: /key
+        - name: chiaroot
+          mountPath: /chia-data
+        - name: chia-wallet
+          mountPath: /chia-data/wallet
       restartPolicy: Always
