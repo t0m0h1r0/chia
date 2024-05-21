@@ -67,7 +67,6 @@ spec:
               value: '1'
             - name: log_level
               value: INFO
-          resources: {}
           volumeMounts:
             - name: secret-ca
               mountPath: /chia-ca
@@ -77,4 +76,3 @@ spec:
               readOnly: true
               mountPath: /plots
       restartPolicy: Always
-      terminationGracePeriodSeconds: 30
