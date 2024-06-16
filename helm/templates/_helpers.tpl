@@ -1,8 +1,11 @@
-{{- define "chia.labels" -}}
-app: {{ .Chart.Name }}
-{{- end -}}
-
-{{- define "chia.selectorLabels" -}}
-app: {{ .Chart.Name }}
-{{- end -}}
+{{- define "chia.commonEnv" -}}
+- name: CHIA_ROOT
+  value: {{ .Values.env.chiaRoot }}
+- name: ca
+  value: {{ .Values.env.caPath }}
+- name: TZ
+  value: {{ .Values.env.timezone }}
+- name: log_level
+  value: {{ .Values.env.logLevel }}
+{{- end }}
 

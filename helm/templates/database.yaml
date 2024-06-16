@@ -1,0 +1,22 @@
+{{- if not .Values.storage.database.useDynamicProvisioning }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.network }}-database
+  labels:
+    storagetype: database
+spec:
+  capacity:
+    storage: {{ .Values.storage.database.fixed.size }}
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: {{ .Values.storage.database.fixed.storageClassName }}
+  iscsi:
+    targetPortal: {{ .Values.storage.database.fixed.iscsi.targetPortal }}
+    iqn: {{ .Values.storage.database.fixed.iscsi.iqn }}
+    lun: {{ .Values.storage.database.fixed.iscsi.lun }}
+    fsType: {{ .Values.storage.database.fixed.iscsi.fsType }}
+    readOnly: false
+---
+{{- end }}
+

@@ -1,20 +1,38 @@
-{{- range $service, $config := .Values.service }}
+{{- $network := .Values.network -}}
+
+{{- $services := dict 
+    "node" (list 
+      (dict "name" "peers" "port" .Values.ports.nodePeers) 
+      (dict "name" "rpc" "port" .Values.ports.nodeRpc)
+    ) 
+    "farmer" (list 
+      (dict "name" "farmer-peers" "port" .Values.ports.farmerPeers) 
+      (dict "name" "farmer-rpc" "port" .Values.ports.farmerRpc) 
+      (dict "name" "wallet-peers" "port" .Values.ports.walletPeers) 
+      (dict "name" "wallet-rpc" "port" .Values.ports.walletRpc)
+    ) 
+    "harvester" (list 
+      (dict "name" "peers" "port" .Values.ports.harvesterPeers) 
+      (dict "name" "rpc" "port" .Values.ports.harvesterRpc)
+    )
+-}}
+
+{{- range $service, $ports := $services }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $service }}
+  name: {{ $network }}-{{ $service }}
   labels:
-    app: {{ $service }}
+    app: {{ $network }}-{{ $service }}
 spec:
-  type: {{ $.Values.service.type }}
-  selector:
-    app: {{ $service }}
   ports:
-  {{- range $port := $config.ports }}
+  {{- range $port := $ports }}
     - name: {{ $port.name }}
+      protocol: TCP
       port: {{ $port.port }}
-      protocol: {{ $port.protocol | default "TCP" }}
   {{- end }}
+  selector:
+    app: {{ $network }}-{{ $service }}
 ---
 {{- end }}
 

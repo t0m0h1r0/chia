@@ -1,69 +1,68 @@
-replicaCount: 1
+network: mainnet
+
+# Image configuration
 image:
   repository: ghcr.io/chia-network/chia
   tag: latest
-  pullPolicy: Always
 
-nodeSelector: {}
+# Port numbers
+ports:
+  farmerPeers: 8447
+  farmerRpc: 8559
+  walletPeers: 8449
+  walletRpc: 9256
+  harvesterPeers: 8448
+  harvesterRpc: 8560
+  nodePeers: 8444
+  nodeRpc: 8555
 
-tolerations: []
-
-affinity: {}
-
-serviceAccount:
-  create: true
-  name: chia-service-account
-
-rbac:
-  create: true
-
-service:
-  type: ClusterIP
-  mainnetNode:
-    ports:
-      - name: peers
-        port: 8444
-      - name: rpc
-        port: 8555
-  mainnetFarmer:
-    ports:
-      - name: farmer-peers
-        port: 8447
-      - name: farmer-rpc
-        port: 8559
-      - name: wallet-peers
-        port: 8449
-      - name: wallet-rpc
-        port: 9256
-  mainnetHarvester:
-    ports:
-      - name: peers
-        port: 8448
-      - name: rpc
-        port: 8560
-
-environment:
-  TZ: UTC
-  log_level: INFO
-  chiaRoot: /chia-data
-  ca: /chia-ca
-  keys: /key/key.txt
-  full_node_peer: mainnet-node:8444
-  farmer_address: mainnet-farmer
-  farmer_port: 8447
-  recursive_plot_scan: 'true'
-  parallel_decompressor_count: '1'
-  decompressor_thread_count: '1'
-
-persistentVolumes:
+# Persistent Volume Configurations
+storage:
+  database:
+    useDynamicProvisioning: true
+    fixed:
+      storageClassName: iscsi-static
+      size: 250Gi
+      iscsi:
+        targetPortal: 192.168.1.112
+        iqn: iqn.2004-04.com.qnap:ts-832px:iscsi.database.576194
+        lun: 0
+        fsType: ext4
+    dynamic:
+      size: 250Gi
+      storageClassName: qnap-sc
   plots:
-    storageClassName: iscsi-static
-    accessModes: [ "ReadWriteOnce" ]
     size: 1Gi
-    iqns:
-      - iqn.2024-05.localdomain.omv1:target0
-      - iqn.2024-05.localdomain.omv1:target1
-      - iqn.2024-05.localdomain.omv1:target2
-      - iqn.2004-04.com.qnap:ts-832x:iscsi.target1.506276
-      - iqn.2004-04.com.qnap:ts-832px:iscsi.target.576194
+    storageClassName: iscsi-static
+    iscsi:
+      - targetPortal: 192.168.1.110
+        iqn: iqn.2024-05.localdomain.omv1:target0
+        lun: 1
+        fsType: xfs
+      - targetPortal: 192.168.1.110
+        iqn: iqn.2024-05.localdomain.omv1:target1
+        lun: 1
+        fsType: xfs
+      - targetPortal: 192.168.1.110
+        iqn: iqn.2024-05.localdomain.omv1:target2
+        lun: 1
+        fsType: xfs
+      - targetPortal: 192.168.1.111
+        iqn: iqn.2004-04.com.qnap:ts-832x:iscsi.target1.506276
+        lun: 1
+        fsType: xfs
+      - targetPortal: 192.168.1.112
+        iqn: iqn.2004-04.com.qnap:ts-832px:iscsi.target.576194
+        lun: 1
+        fsType: xfs
+
+# Service Account
+serviceAccount: chia-service-account
+
+# Common Environment Variables
+env:
+  chiaRoot: /chia-data
+  caPath: /chia-ca
+  timezone: UTC
+  logLevel: INFO
 

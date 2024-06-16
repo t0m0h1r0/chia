@@ -1,62 +1,60 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mainnet-node
-  labels:
-    app: mainnet-node
+  name: {{ .Values.network }}-node
 spec:
-  replicas: {{ .Values.replicaCount.node }}
+  replicas: 1
   selector:
     matchLabels:
-      app: mainnet-node
-      k8s.chia.net.provenance: ChiaNode
+      app: {{ .Values.network }}-node
   volumeClaimTemplates:
   - metadata:
-      name: chia-database
+      name: {{ .Values.network }}-database
     spec:
-      accessModes: {{ .Values.persistence.database.accessModes }}
-      storageClassName: {{ .Values.persistence.database.storageClassName }}
+      accessModes:
+      - ReadWriteOnce
       resources:
         requests:
-          storage: {{ .Values.persistence.database.size }}
+          storage: {{ .Values.storage.database.dynamic.size }}
+      {{- if .Values.storage.database.useDynamicProvisioning }}
+      storageClassName: {{ .Values.storage.database.dynamic.storageClassName }}
+      {{- else }}
+      storageClassName: {{ .Values.storage.database.fixed.storageClassName }}
       selector:
         matchLabels:
           storagetype: database
+      {{- end }}
   template:
     metadata:
       labels:
-        app: mainnet-node
-        k8s.chia.net.provenance: ChiaNode
+        app: {{ .Values.network }}-node
     spec:
-      containers:
-      - name: chia
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        env:
-        - name: service
-          value: 'node'
-        - name: CHIA_ROOT
-          value: "{{ .Values.env.chia_root }}"
-        - name: keys
-          value: 'none'
-        - name: ca
-          value: "{{ .Values.env.ca }}"
-        - name: TZ
-          value: "{{ .Values.env.TZ }}"
-        - name: log_level
-          value: "{{ .Values.env.log_level }}"
-        ports:
-        {{- range .Values.services.node.ports }}
-        - containerPort: {{ .port }}
-          name: {{ .name }}
-          protocol: TCP
-        {{- end }}
-        volumeMounts:
-        - mountPath: /chia-ca
-          name: secret-ca
-        - mountPath: /chia-data
-          name: chia-database
       volumes:
       - name: secret-ca
         secret:
-          secretName: {{ .Values.secrets.ca }}
+          secretName: {{ .Values.network }}-ca
+          defaultMode: 420
+      containers:
+      - name: chia
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - name: peers
+          containerPort: {{ .Values.ports.nodePeers }}
+          protocol: TCP
+        - name: rpc
+          containerPort: {{ .Values.ports.nodeRpc }}
+          protocol: TCP
+        env:
+        - name: service
+          value: node
+        - name: keys
+          value: none
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        volumeMounts:
+        - name: secret-ca
+          mountPath: /chia-ca
+        - name: {{ .Values.network }}-database
+          mountPath: /chia-data/db
+        imagePullPolicy: Always
+      restartPolicy: Always
 
