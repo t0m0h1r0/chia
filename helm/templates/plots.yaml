@@ -1,0 +1,22 @@
+{{- range $index, $plot := .Values.storage.plots.iscsi }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: chia-plots-{{ $index }}
+  labels:
+    storagetype: plots
+spec:
+  capacity:
+    storage: {{ $.Values.storage.plots.size }}
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ $.Values.storage.plots.storageClassName }}
+  iscsi:
+    targetPortal: {{ $plot.targetPortal }}
+    iqn: {{ $plot.iqn }}
+    lun: {{ $plot.lun }}
+    fsType: {{ $plot.fsType }}
+    readOnly: true
+---
+{{- end }}
+

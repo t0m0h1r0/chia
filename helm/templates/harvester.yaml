@@ -1,93 +1,72 @@
-{{- range $index, $name := tuple "mainnet-harvester" "mainnet-node" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ $name }}
+  name: {{ .Values.network }}-harvester
 spec:
-  replicas: {{ $.Values.replicaCount }}
+  replicas: 5
   selector:
     matchLabels:
-      app: {{ $name }}
+      app: {{ .Values.network }}-harvester
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  volumeClaimTemplates:
+  - metadata:
+      name: chia-plots
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      volumeMode: Filesystem
+      storageClassName: {{ .Values.storage.plots.storageClassName }}
+      resources:
+        requests:
+          storage: {{ .Values.storage.plots.size }}
+      selector:
+        matchLabels:
+          storagetype: plots
   template:
     metadata:
       labels:
-        app: {{ $name }}
+        app: {{ .Values.network }}-harvester
     spec:
+      volumes:
+        - name: secret-ca
+          secret:
+            secretName: {{ .Values.network }}-ca
+            defaultMode: 420
+        - name: chiaroot
+          emptyDir: {}
       containers:
         - name: chia
-          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
-          env:
-            - name: service
-              value: {{ if eq $name "mainnet-harvester" }}harvester{{ else }}node{{ end }}
-            - name: CHIA_ROOT
-              value: {{ $.Values.environment.chiaRoot }}
-            - name: ca
-              value: {{ $.Values.environment.ca }}
-            - name: TZ
-              value: {{ $.Values.environment.TZ }}
-            - name: log_level
-              value: {{ $.Values.environment.log_level }}
-            {{- if eq $name "mainnet-harvester" }}
-            - name: recursive_plot_scan
-              value: {{ $.Values.environment.recursive_plot_scan }}
-            - name: farmer_address
-              value: {{ $.Values.environment.farmer_address }}
-            - name: farmer_port
-              value: {{ $.Values.environment.farmer_port }}
-            - name: parallel_decompressor_count
-              value: {{ $.Values.environment.parallel_decompressor_count }}
-            - name: decompressor_thread_count
-              value: {{ $.Values.environment.decompressor_thread_count }}
-            {{- end }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - name: peers
-              containerPort: {{ if eq $name "mainnet-harvester" }}8448{{ else }}8444{{ end }}
+              containerPort: {{ .Values.ports.harvesterPeers }}
               protocol: TCP
             - name: rpc
-              containerPort: {{ if eq $name "mainnet-harvester" }}8560{{ else }}8555{{ end }}
+              containerPort: {{ .Values.ports.harvesterRpc }}
               protocol: TCP
+          env:
+            - name: service
+              value: harvester
+            - name: recursive_plot_scan
+              value: 'true'
+            - name: farmer_address
+              value: '{{ .Values.network }}-farmer'
+            - name: farmer_port
+              value: '{{ .Values.ports.farmerPeers }}'
+            - name: parallel_decompressor_count
+              value: '1'
+            - name: decompressor_thread_count
+              value: '1'
+            {{ include "chia.commonEnv" . }}
           volumeMounts:
             - name: secret-ca
               mountPath: /chia-ca
             - name: chiaroot
               mountPath: /chia-data
-            {{- if eq $name "mainnet-harvester" }}
             - name: chia-plots
-              mountPath: /plots
               readOnly: true
-            {{- else }}
-            - name: chia-database
-              mountPath: /chia-data/db
-            {{- end }}
-      volumes:
-        - name: secret-ca
-          secret:
-            secretName: mainnet-ca
-            defaultMode: 420
-        - name: chiaroot
-          emptyDir: {}
-  volumeClaimTemplates:
-    {{- if eq $name "mainnet-harvester" }}
-    - metadata:
-        name: chia-plots
-      spec:
-        accessModes: {{ $.Values.persistentVolumes.plots.accessModes }}
-        resources:
-          requests:
-            storage: {{ $.Values.persistentVolumes.plots.size }}
-        storageClassName: {{ $.Values.persistentVolumes.plots.storageClassName }}
-        selector:
-          matchLabels:
-            storagetype: plots
-    {{- else }}
-    - metadata:
-        name: chia-database
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 250Gi
-    {{- end }}
----
-{{- end }}
+              mountPath: /plots
+      restartPolicy: Always
 

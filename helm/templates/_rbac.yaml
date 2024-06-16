@@ -1,6 +1,0 @@
-{{- if .Values.rbac.create -}}
-{{- include "chia.serviceAccountName" . }}
-{{- include "chia.role" . }}
-{{- include "chia.roleBinding" . }}
-{{- end -}}
-

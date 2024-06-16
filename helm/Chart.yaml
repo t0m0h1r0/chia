@@ -1,6 +1,6 @@
 apiVersion: v2
-name: chia-helm-chart
-description: A Helm chart for Chia Network Kubernetes resources
+name: chia-network
+description: A Helm chart for deploying Chia Network nodes
 version: 0.1.0
-appVersion: "latest"
+appVersion: "1.0"
 
