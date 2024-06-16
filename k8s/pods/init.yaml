@@ -31,7 +31,15 @@ spec:
           - /bin/sh
           - -c
           - |
-            kubectl create secret generic mainnet-ca --from-file=/mnt/chia/config/ssl/ca/chia_ca.crt --from-file=/mnt/chia/config/ssl/ca/chia_ca.key --from-file=/mnt/chia/config/ssl/ca/private_ca.crt --from-file=/mnt/chia/config/ssl/ca/private_ca.key 
+            if kubectl get secret mainnet-ca; then
+              echo "Secret already exists. Skipping creation."
+            else
+              kubectl create secret generic mainnet-ca \
+                --from-file=/mnt/chia/config/ssl/ca/chia_ca.crt \
+                --from-file=/mnt/chia/config/ssl/ca/chia_ca.key \
+                --from-file=/mnt/chia/config/ssl/ca/private_ca.crt \
+                --from-file=/mnt/chia/config/ssl/ca/private_ca.key
+            fi
         volumeMounts:
         - name: chia-config
           mountPath: /mnt/chia
