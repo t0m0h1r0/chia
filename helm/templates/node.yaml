@@ -8,53 +8,53 @@ spec:
     matchLabels:
       app: {{ .Values.network }}-node
   volumeClaimTemplates:
-    {{- if .Values.storage.database.useDynamicProvisioning }}
-    - metadata:
-        name: chia-database
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: {{ .Values.storage.database.dynamic.size }}
-        storageClassName: {{ .Values.storage.database.dynamic.storageClassName }}
-    {{- end }}
+  - metadata:
+      name: {{ .Values.network }}-database
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.storage.database.dynamic.size }}
+      {{- if .Values.storage.database.useDynamicProvisioning }}
+      storageClassName: {{ .Values.storage.database.dynamic.storageClassName }}
+      {{- else }}
+      storageClassName: {{ .Values.storage.database.fixed.storageClassName }}
+      selector:
+        matchLabels:
+          storagetype: database
+      {{- end }}
   template:
     metadata:
       labels:
         app: {{ .Values.network }}-node
     spec:
       volumes:
-        {{- if not .Values.storage.database.useDynamicProvisioning }}
-        - name: chia-database
-          persistentVolumeClaim:
-            claimName: chia-database
-        {{- end }}
-        - name: secret-ca
-          secret:
-            secretName: {{ .Values.network }}-ca
-            defaultMode: 420
+      - name: secret-ca
+        secret:
+          secretName: {{ .Values.network }}-ca
+          defaultMode: 420
       containers:
-        - name: chia
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          ports:
-            - name: peers
-              containerPort: {{ .Values.ports.nodePeers }}
-              protocol: TCP
-            - name: rpc
-              containerPort: {{ .Values.ports.nodeRpc }}
-              protocol: TCP
-          env:
-            - name: service
-              value: node
-            - name: keys
-              value: none
-            {{ include "chia.commonEnv" . }}
-          volumeMounts:
-            - name: secret-ca
-              mountPath: /chia-ca
-            - name: chia-database
-              mountPath: /chia-data/db
-          imagePullPolicy: Always
+      - name: chia
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      ports:
+      - name: peers
+        containerPort: {{ .Values.ports.nodePeers }}
+        protocol: TCP
+      - name: rpc
+        containerPort: {{ .Values.ports.nodeRpc }}
+        protocol: TCP
+      env:
+      - name: service
+        value: node
+      - name: keys
+        value: none
+      {{ include "chia.commonEnv" . | nindent 6 }}
+      volumeMounts:
+      - name: secret-ca
+        mountPath: /chia-ca
+      - name: {{ .Values.network }}-database
+        mountPath: /chia-data/db
+      imagePullPolicy: Always
       restartPolicy: Always
 

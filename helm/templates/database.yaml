@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: chia-database
+  name: {{ .Values.network }}-database
   labels:
     storagetype: database
 spec:

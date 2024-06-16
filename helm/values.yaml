@@ -21,6 +21,7 @@ storage:
   database:
     useDynamicProvisioning: false
     fixed:
+      storageClassName: iscsi-static
       size: 250Gi
       iscsi:
         targetPortal: 192.168.1.112

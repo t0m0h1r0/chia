@@ -12,10 +12,10 @@ spec:
     whenScaled: Retain
   volumeClaimTemplates:
   - metadata:
-      name: chia-plots
+      name: {{ .Values.network }}-plots
     spec:
       accessModes:
-        - ReadWriteOnce
+      - ReadWriteOnce
       volumeMode: Filesystem
       storageClassName: {{ .Values.storage.plots.storageClassName }}
       resources:
@@ -30,43 +30,43 @@ spec:
         app: {{ .Values.network }}-harvester
     spec:
       volumes:
-        - name: secret-ca
-          secret:
-            secretName: {{ .Values.network }}-ca
-            defaultMode: 420
-        - name: chiaroot
-          emptyDir: {}
+      - name: secret-ca
+        secret:
+          secretName: {{ .Values.network }}-ca
+          defaultMode: 420
+      - name: chiaroot
+        emptyDir: {}
       containers:
-        - name: chia
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          ports:
-            - name: peers
-              containerPort: {{ .Values.ports.harvesterPeers }}
-              protocol: TCP
-            - name: rpc
-              containerPort: {{ .Values.ports.harvesterRpc }}
-              protocol: TCP
-          env:
-            - name: service
-              value: harvester
-            - name: recursive_plot_scan
-              value: 'true'
-            - name: farmer_address
-              value: '{{ .Values.network }}-farmer'
-            - name: farmer_port
-              value: '{{ .Values.ports.farmerPeers }}'
-            - name: parallel_decompressor_count
-              value: '1'
-            - name: decompressor_thread_count
-              value: '1'
-            {{ include "chia.commonEnv" . }}
-          volumeMounts:
-            - name: secret-ca
-              mountPath: /chia-ca
-            - name: chiaroot
-              mountPath: /chia-data
-            - name: chia-plots
-              readOnly: true
-              mountPath: /plots
+      - name: chia
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        ports:
+        - name: peers
+          containerPort: {{ .Values.ports.harvesterPeers }}
+          protocol: TCP
+        - name: rpc
+          containerPort: {{ .Values.ports.harvesterRpc }}
+          protocol: TCP
+        env:
+        - name: service
+          value: harvester
+        - name: recursive_plot_scan
+          value: 'true'
+        - name: farmer_address
+          value: '{{ .Values.network }}-farmer'
+        - name: farmer_port
+          value: '{{ .Values.ports.farmerPeers }}'
+        - name: parallel_decompressor_count
+          value: '1'
+        - name: decompressor_thread_count
+          value: '1'
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        volumeMounts:
+        - name: secret-ca
+          mountPath: /chia-ca
+        - name: chiaroot
+          mountPath: /chia-data
+        - name: {{ .Values.network }}-plots
+          readOnly: true
+          mountPath: /plots
       restartPolicy: Always
 
