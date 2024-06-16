@@ -1,3 +1,4 @@
+{{- if not .Values.storage.database.useDynamicProvisioning }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -6,13 +7,15 @@ metadata:
     storagetype: database
 spec:
   capacity:
-    storage: {{ .Values.storage.database.size }}
+    storage: {{ .Values.storage.database.fixed.size }}
   accessModes:
     - ReadWriteOnce
-  storageClassName: {{ .Values.storage.database.storageClassName }}
   iscsi:
-    targetPortal: {{ .Values.storage.database.iscsi.targetPortal }}
-    iqn: {{ .Values.storage.database.iscsi.iqn }}
-    lun: {{ .Values.storage.database.iscsi.lun }}
-    fsType: {{ .Values.storage.database.iscsi.fsType }}
+    targetPortal: {{ .Values.storage.database.fixed.iscsi.targetPortal }}
+    iqn: {{ .Values.storage.database.fixed.iscsi.iqn }}
+    lun: {{ .Values.storage.database.fixed.iscsi.lun }}
+    fsType: {{ .Values.storage.database.fixed.iscsi.fsType }}
     readOnly: false
+---
+{{- end }}
+
