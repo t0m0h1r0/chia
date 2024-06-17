@@ -1,11 +1,11 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: chia-ca-init
+  name: {{ .Values.network }}-init
 spec:
   template:
     metadata:
-      name: chia-ca-init
+      name: {{ .Values.network }}-init
       labels:
         app: chia
     spec:
