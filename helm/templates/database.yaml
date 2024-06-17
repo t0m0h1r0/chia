@@ -10,6 +10,7 @@ spec:
     storage: {{ .Values.storage.database.fixed.size }}
   accessModes:
   - ReadWriteOnce
+  storageClassName: {{ .Values.storage.database.fixed.storageClassName }}
   iscsi:
     targetPortal: {{ .Values.storage.database.fixed.iscsi.targetPortal }}
     iqn: {{ .Values.storage.database.fixed.iscsi.iqn }}
