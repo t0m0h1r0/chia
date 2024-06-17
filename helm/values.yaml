@@ -19,7 +19,7 @@ ports:
 # Persistent Volume Configurations
 storage:
   database:
-    useDynamicProvisioning: false
+    useDynamicProvisioning: true
     fixed:
       storageClassName: iscsi-static
       size: 250Gi

@@ -15,7 +15,7 @@ spec:
       name: {{ .Values.network }}-plots
     spec:
       accessModes:
-      - ReadWriteOnce
+      - ReadOnlyMany
       volumeMode: Filesystem
       storageClassName: {{ .Values.storage.plots.storageClassName }}
       resources:

@@ -37,24 +37,24 @@ spec:
       containers:
       - name: chia
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-      ports:
-      - name: peers
-        containerPort: {{ .Values.ports.nodePeers }}
-        protocol: TCP
-      - name: rpc
-        containerPort: {{ .Values.ports.nodeRpc }}
-        protocol: TCP
-      env:
-      - name: service
-        value: node
-      - name: keys
-        value: none
-      {{ include "chia.commonEnv" . | nindent 6 }}
-      volumeMounts:
-      - name: secret-ca
-        mountPath: /chia-ca
-      - name: {{ .Values.network }}-database
-        mountPath: /chia-data/db
-      imagePullPolicy: Always
+        ports:
+        - name: peers
+          containerPort: {{ .Values.ports.nodePeers }}
+          protocol: TCP
+        - name: rpc
+          containerPort: {{ .Values.ports.nodeRpc }}
+          protocol: TCP
+        env:
+        - name: service
+          value: node
+        - name: keys
+          value: none
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        volumeMounts:
+        - name: secret-ca
+          mountPath: /chia-ca
+        - name: {{ .Values.network }}-database
+          mountPath: /chia-data/db
+        imagePullPolicy: Always
       restartPolicy: Always
 
