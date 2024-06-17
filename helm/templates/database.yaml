@@ -4,7 +4,7 @@ kind: PersistentVolume
 metadata:
   name: {{ .Values.network }}-database
   labels:
-    storagetype: database
+    storagetype: {{ .Values.storage.database.fixed.storageType }}
 spec:
   capacity:
     storage: {{ .Values.storage.database.fixed.size }}

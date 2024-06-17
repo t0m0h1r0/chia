@@ -4,7 +4,7 @@ kind: PersistentVolume
 metadata:
   name: {{ $.Values.network }}-plots-{{ $index }}
   labels:
-    storagetype: plots
+    storagetype: {{ $.Values.storage.plots.storageType }}
 spec:
   capacity:
     storage: {{ $.Values.storage.plots.size }}

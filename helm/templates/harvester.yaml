@@ -23,7 +23,7 @@ spec:
           storage: {{ .Values.storage.plots.size }}
       selector:
         matchLabels:
-          storagetype: plots
+          storagetype: {{ .Values.storage.plots.storageType }}
   template:
     metadata:
       labels:
@@ -41,10 +41,10 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         ports:
         - name: peers
-          containerPort: {{ .Values.ports.harvesterPeers }}
+          containerPort: {{ .Values.ports.harvester.peers }}
           protocol: TCP
         - name: rpc
-          containerPort: {{ .Values.ports.harvesterRpc }}
+          containerPort: {{ .Values.ports.harvester.rpc }}
           protocol: TCP
         env:
         - name: service
@@ -54,7 +54,7 @@ spec:
         - name: farmer_address
           value: '{{ .Values.network }}-farmer'
         - name: farmer_port
-          value: '{{ .Values.ports.farmerPeers }}'
+          value: '{{ .Values.ports.farmer.peers }}'
         - name: parallel_decompressor_count
           value: '1'
         - name: decompressor_thread_count

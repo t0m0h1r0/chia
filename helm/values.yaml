@@ -7,20 +7,25 @@ image:
 
 # Port numbers
 ports:
-  farmerPeers: 8447
-  farmerRpc: 8559
-  walletPeers: 8449
-  walletRpc: 9256
-  harvesterPeers: 8448
-  harvesterRpc: 8560
-  nodePeers: 8444
-  nodeRpc: 8555
+  farmer:
+    peers: 8447
+    rpc: 8559
+  wallet:
+    peers: 8449
+    rpc: 9256
+  harvester:
+    peers: 8448
+    rpc: 8560
+  node:
+    peers: 8444
+    rpc: 8555
 
 # Persistent Volume Configurations
 storage:
   database:
     useDynamicProvisioning: true
     fixed:
+      storageType: database
       storageClassName: iscsi-static
       size: 250Gi
       iscsi:
@@ -33,6 +38,7 @@ storage:
       storageClassName: qnap-sc
   plots:
     size: 1Gi
+    storageType: plots
     storageClassName: iscsi-static
     iscsi:
       - targetPortal: 192.168.1.110

@@ -22,7 +22,7 @@ spec:
       storageClassName: {{ .Values.storage.database.fixed.storageClassName }}
       selector:
         matchLabels:
-          storagetype: database
+          storagetype: {{ .Values.storage.database.fixed.storageType }}
       {{- end }}
   template:
     metadata:
@@ -39,10 +39,10 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - name: peers
-          containerPort: {{ .Values.ports.nodePeers }}
+          containerPort: {{ .Values.ports.node.peers }}
           protocol: TCP
         - name: rpc
-          containerPort: {{ .Values.ports.nodeRpc }}
+          containerPort: {{ .Values.ports.node.rpc }}
           protocol: TCP
         env:
         - name: service
