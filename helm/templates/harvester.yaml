@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ .Values.network }}-harvester
 spec:
-  replicas: 5
+  replicas: {{ len .Values.storage.plots.iscsi }}
   selector:
     matchLabels:
       app: {{ .Values.network }}-harvester
