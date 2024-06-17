@@ -27,9 +27,9 @@ metadata:
 spec:
   ports:
   {{- range $port := $ports }}
-    - name: {{ $port.name }}
-      protocol: TCP
-      port: {{ $port.port }}
+  - name: {{ $port.name }}
+    protocol: TCP
+    port: {{ $port.port }}
   {{- end }}
   selector:
     app: {{ $network }}-{{ $service }}
