@@ -39,10 +39,10 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - name: peers
-          containerPort: {{ .Values.ports.nodePeers }}
+          containerPort: {{ .Values.ports.node.peers }}
           protocol: TCP
         - name: rpc
-          containerPort: {{ .Values.ports.nodeRpc }}
+          containerPort: {{ .Values.ports.node.rpc }}
           protocol: TCP
         env:
         - name: service

@@ -20,19 +20,19 @@ spec:
         - name: keys
           value: /key/key.txt
         - name: full_node_peer
-          value: {{ .Values.network }}-node:{{ .Values.ports.nodePeers }}
+          value: {{ .Values.network }}-node:{{ .Values.ports.node.peers }}
         {{ include "chia.commonEnv" . | nindent 8 }}
         ports:
-        - containerPort: {{ .Values.ports.farmerPeers }}
+        - containerPort: {{ .Values.ports.farmer.peers }}
           name: farmer-peers
           protocol: TCP
-        - containerPort: {{ .Values.ports.farmerRpc }}
+        - containerPort: {{ .Values.ports.farmer.rpc }}
           name: farmer-rpc
           protocol: TCP
-        - containerPort: {{ .Values.ports.walletPeers }}
+        - containerPort: {{ .Values.ports.wallet.peers }}
           name: wallet-peers
           protocol: TCP
-        - containerPort: {{ .Values.ports.walletRpc }}
+        - containerPort: {{ .Values.ports.wallet.rpc }}
           name: wallet-rpc
           protocol: TCP
         volumeMounts:
