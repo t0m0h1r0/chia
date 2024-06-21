@@ -22,7 +22,7 @@ spec:
       storageClassName: {{ .Values.storage.database.fixed.storageClassName }}
       selector:
         matchLabels:
-          storagetype: database
+          storagetype: {{ .Values.storage.database.fixed.storageType }}
       {{- end }}
   template:
     metadata:

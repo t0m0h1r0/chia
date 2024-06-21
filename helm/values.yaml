@@ -25,6 +25,7 @@ storage:
   database:
     useDynamicProvisioning: true
     fixed:
+      storageType: database
       storageClassName: iscsi-static
       size: 250Gi
       iscsi:
@@ -37,6 +38,7 @@ storage:
       storageClassName: qnap-sc
   plots:
     size: 1Gi
+    storageType: plots
     storageClassName: iscsi-static
     iscsi:
       - targetPortal: 192.168.1.110

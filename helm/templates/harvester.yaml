@@ -23,7 +23,7 @@ spec:
           storage: {{ .Values.storage.plots.size }}
       selector:
         matchLabels:
-          storagetype: plots
+          storagetype: {{ .Values.storage.plots.storageType }}
   template:
     metadata:
       labels:
