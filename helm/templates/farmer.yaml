@@ -37,14 +37,14 @@ spec:
           protocol: TCP
         volumeMounts:
         - mountPath: /chia-ca
-          name: {{ .Values.network }}-ca
+          name: secret-ca
         - mountPath: /key
           name: key
         - name: chiaroot
           mountPath: /chia-data
       restartPolicy: Always
       volumes:
-      - name: {{ .Values.network }}-ca
+      - name: secret-ca
         secret:
           secretName: {{ .Values.network }}-ca
       - name: key

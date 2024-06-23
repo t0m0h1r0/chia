@@ -61,7 +61,7 @@ spec:
           value: '1'
         {{ include "chia.commonEnv" . | nindent 8 }}
         volumeMounts:
-        - name: {{ .Values.network }}-ca
+        - name: secret-ca
           mountPath: /chia-ca
         - name: chiaroot
           mountPath: /chia-data
