@@ -3,7 +3,7 @@ network: mainnet
 # Image configuration
 image:
   repository: ghcr.io/chia-network/chia
-  tag: latest
+  tag: 2.3.1
 
 # Port numbers
 ports:
