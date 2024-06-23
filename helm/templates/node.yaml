@@ -30,7 +30,7 @@ spec:
         app: {{ .Values.network }}-node
     spec:
       volumes:
-      - name: secret-ca
+      - name: {{ .Values.network }}-ca
         secret:
           secretName: {{ .Values.network }}-ca
           defaultMode: 420
@@ -51,7 +51,7 @@ spec:
           value: none
         {{ include "chia.commonEnv" . | nindent 8 }}
         volumeMounts:
-        - name: secret-ca
+        - name: {{ .Values.network }}-ca
           mountPath: /chia-ca
         - name: {{ .Values.network }}-database
           mountPath: /chia-data/db

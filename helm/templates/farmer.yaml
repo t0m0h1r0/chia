@@ -37,7 +37,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - mountPath: /chia-ca
-          name: secret-ca
+          name: {{ .Values.network }}-ca
         - mountPath: /key
           name: key
         - name: chiaroot
