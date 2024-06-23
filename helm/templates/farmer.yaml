@@ -44,7 +44,7 @@ spec:
           mountPath: /chia-data
       restartPolicy: Always
       volumes:
-      - name: secret-ca
+      - name: {{ .Values.network }}-ca
         secret:
           secretName: {{ .Values.network }}-ca
       - name: key
