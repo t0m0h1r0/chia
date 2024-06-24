@@ -3,6 +3,7 @@ kind: Job
 metadata:
   name: {{ .Values.network }}-init
 spec:
+  ttlSecondsAfterFinished: 100
   template:
     metadata:
       name: {{ .Values.network }}-init
