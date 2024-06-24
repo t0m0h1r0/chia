@@ -17,9 +17,6 @@ spec:
         requests:
           storage: {{ .Values.storage.wallet.size }}
       storageClassName: {{ .Values.storage.wallet.storageClassName }}
-      selector:
-        matchLabels:
-          storagetype: {{ .Values.storage.wallet.storageType }}
   template:
     metadata:
       labels:
