@@ -53,8 +53,6 @@ spec:
           name: key
         #- name: chiaroot
         #  mountPath: /chia-data
-        - name: {{ .Values.network }}-wallet
-          mountPath: /chia-data/wallet/db
       restartPolicy: Always
       volumes:
       - name: secret-ca
@@ -65,4 +63,6 @@ spec:
           secretName: chiakey
       #- name: chiaroot
       #  emptyDir: {}
+      - name: {{ .Values.network }}-wallet
+        mountPath: /chia-data/wallet/db
 
