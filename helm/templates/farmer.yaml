@@ -1,11 +1,22 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Values.network }}-farmer
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: {{ .Values.network }}-farmer
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Values.network }}-wallet
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.storage.wallet.size }}
+      storageClassName: {{ .Values.storage.wallet.storageClassName }}
   template:
     metadata:
       labels:
@@ -40,8 +51,10 @@ spec:
           name: secret-ca
         - mountPath: /key
           name: key
-        - name: chiaroot
-          mountPath: /chia-data
+        #- name: chiaroot
+        #  mountPath: /chia-data
+        - name: {{ .Values.network }}-wallet
+          mountPath: /chia-data/wallet/db
       restartPolicy: Always
       volumes:
       - name: secret-ca
@@ -50,6 +63,6 @@ spec:
       - name: key
         secret:
           secretName: chiakey
-      - name: chiaroot
-        emptyDir: {}
+      #- name: chiaroot
+      #  emptyDir: {}
 

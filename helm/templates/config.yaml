@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chia-config
+data:
+  pool_list.yaml: |-
+    pool_list:
+    {{- range .Values.poolList }}
+      - authentication_public_key: {{ .authenticationPublicKey }}
+        launcher_id: {{ .launcherId }}
+        owner_public_key: {{ .ownerPublicKey }}
+        p2_singleton_puzzle_hash: {{ .p2SingletonPuzzleHash }}
+        payout_instructions: {{ .payoutInstructions }}
+        pool_url: {{ .poolUrl }}
+        target_puzzle_hash: {{ .targetPuzzleHash }}
+    {{- end }}
+
