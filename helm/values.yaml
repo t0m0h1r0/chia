@@ -22,10 +22,6 @@ ports:
 
 # Persistent Volume Configurations
 storage:
-  wallet:
-    storageType: wallet
-    size: 20Gi
-    storageClassName: qnap-sc
   database:
     useDynamicProvisioning: true
     fixed:
