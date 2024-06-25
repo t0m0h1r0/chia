@@ -24,7 +24,7 @@ ports:
 storage:
   wallet:
     storageType: wallet
-    size: 20Gi
+    size: 1Gi
     storageClassName: qnap-sc
   database:
     useDynamicProvisioning: true

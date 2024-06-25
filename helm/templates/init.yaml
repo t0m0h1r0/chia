@@ -22,7 +22,7 @@ spec:
         - name: CHIA_ROOT
           value: /mnt/chia
         volumeMounts:
-        - name: chia-config
+        - name: chia-ssl
           mountPath: /mnt/chia
       containers:
       - name: kubectl
@@ -41,10 +41,10 @@ spec:
               --from-file=/mnt/chia/config/ssl/ca/private_ca.key
           fi
         volumeMounts:
-        - name: chia-config
+        - name: chia-ssl
           mountPath: /mnt/chia
       volumes:
-      - name: chia-config
+      - name: chia-ssl
         emptyDir: {}
       restartPolicy: OnFailure
 
