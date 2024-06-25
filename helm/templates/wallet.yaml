@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.network }}-wallet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.network }}-wallet
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Values.network }}-wallet
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.storage.wallet.size }}
+      storageClassName: {{ .Values.storage.wallet.storageClassName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.network }}-wallet
+    spec:
+      containers:
+      - name: wallet
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        env:
+        - name: service
+          value: 'wallet'
+        - name: keys
+          value: /key/key.txt
+        - name: full_node_peer
+          value: {{ .Values.network }}-node:{{ .Values.ports.node.peers }}
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        ports:
+        - containerPort: {{ .Values.ports.wallet.peers }}
+          name: wallet-peers
+          protocol: TCP
+        - containerPort: {{ .Values.ports.wallet.rpc }}
+          name: wallet-rpc
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /chia-ca
+          name: secret-ca
+        - mountPath: /key
+          name: key
+        - name: {{ .Values.network }}-wallet
+          mountPath: /chia-data/wallet/db
+      restartPolicy: Always
+      volumes:
+      - name: secret-ca
+        secret:
+          secretName: {{ .Values.network }}-ca
+      - name: key
+        secret:
+          secretName: chiakey
+
