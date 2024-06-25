@@ -35,10 +35,10 @@ spec:
         {{ include "chia.commonEnv" . | nindent 8 }}
         ports:
         - containerPort: {{ .Values.ports.wallet.peers }}
-          name: wallet-peers
+          name: peers
           protocol: TCP
         - containerPort: {{ .Values.ports.wallet.rpc }}
-          name: wallet-rpc
+          name: rpc
           protocol: TCP
         volumeMounts:
         - mountPath: /chia-ca

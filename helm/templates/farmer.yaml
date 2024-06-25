@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ .Values.network }}-farmer
 spec:
@@ -7,27 +7,33 @@ spec:
   selector:
     matchLabels:
       app: {{ .Values.network }}-farmer
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ .Values.network }}-wallet
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: {{ .Values.storage.wallet.size }}
-      storageClassName: {{ .Values.storage.wallet.storageClassName }}
   template:
     metadata:
       labels:
         app: {{ .Values.network }}-farmer
     spec:
+      initContainers:
+      - name: generate-config
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        env:
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        command:
+          - /bin/sh
+          - -c
+          - |
+            chia init && \
+            yq eval-all 'select(fileIndex == 0) * select(fileIndex == 1) | .pool.pool_list = select(fileIndex == 1)' /chia-data/config/config.yaml /chia-config/pool_list.yaml -i
+        volumeMounts:
+        - name: chiaroot
+          mountPath: /chia-data
+        - name: chia-config
+          mountPath: /chia-config
       containers:
       - name: farmer
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         env:
         - name: service
-          value: 'farmer-only wallet'
+          value: 'farmer-only'
         - name: keys
           value: /key/key.txt
         - name: full_node_peer
@@ -35,26 +41,18 @@ spec:
         {{ include "chia.commonEnv" . | nindent 8 }}
         ports:
         - containerPort: {{ .Values.ports.farmer.peers }}
-          name: farmer-peers
+          name: peers
           protocol: TCP
         - containerPort: {{ .Values.ports.farmer.rpc }}
-          name: farmer-rpc
-          protocol: TCP
-        - containerPort: {{ .Values.ports.wallet.peers }}
-          name: wallet-peers
-          protocol: TCP
-        - containerPort: {{ .Values.ports.wallet.rpc }}
-          name: wallet-rpc
+          name: rpc
           protocol: TCP
         volumeMounts:
         - mountPath: /chia-ca
           name: secret-ca
         - mountPath: /key
           name: key
-        #- name: chiaroot
-        #  mountPath: /chia-data
-        - name: {{ .Values.network }}-wallet
-          mountPath: /chia-data/wallet/db
+        - name: chiaroot
+          mountPath: /chia-data
       restartPolicy: Always
       volumes:
       - name: secret-ca
@@ -63,6 +61,8 @@ spec:
       - name: key
         secret:
           secretName: chiakey
-      #- name: chiaroot
-      #  emptyDir: {}
-
+      - name: chiaroot
+        emptyDir: {}
+      - name: chia-config
+        configMap:
+          name: chia-config

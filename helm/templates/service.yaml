@@ -6,10 +6,12 @@
       (dict "name" "rpc" "port" .Values.ports.node.rpc)
     ) 
     "farmer" (list 
-      (dict "name" "farmer-peers" "port" .Values.ports.farmer.peers) 
-      (dict "name" "farmer-rpc" "port" .Values.ports.farmer.rpc) 
-      (dict "name" "wallet-peers" "port" .Values.ports.wallet.peers) 
-      (dict "name" "wallet-rpc" "port" .Values.ports.wallet.rpc)
+      (dict "name" "peers" "port" .Values.ports.farmer.peers) 
+      (dict "name" "rpc" "port" .Values.ports.farmer.rpc) 
+    ) 
+    "wallet" (list 
+      (dict "name" "peers" "port" .Values.ports.wallet.peers) 
+      (dict "name" "rpc" "port" .Values.ports.wallet.rpc)
     ) 
     "harvester" (list 
       (dict "name" "peers" "port" .Values.ports.harvester.peers) 
