@@ -37,9 +37,25 @@ spec:
       - name: chiaroot
         emptyDir: {}
       containers:
+      - name: exporter
+        image: ghcr.io/chia-network/chia-exporter:latest
+        ports:
+        - name: exporter
+          containerPort: {{ .Values.ports.harvester.exporter }}
+          protocol: TCP
+        env:
+        - name: CHIA_EXPORTER_HOSTNAME
+          value: localhost
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        volumeMounts:
+        - name: chiaroot
+          mountPath: /chia-data
       - name: chia
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         ports:
+        - name: daemon
+          containerPort: {{ .Values.ports.harvester.daemon }}
+          protocol: TCP
         - name: peers
           containerPort: {{ .Values.ports.harvester.peers }}
           protocol: TCP
