@@ -34,10 +34,28 @@ spec:
         secret:
           secretName: {{ .Values.network }}-ca
           defaultMode: 420
+      - name: chiaroot
+        emptyDir: {}
       containers:
-      - name: chia
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      - name: exporter
+        image: ghcr.io/chia-network/chia-exporter:latest
         ports:
+        - name: exporter
+          containerPort: {{ .Values.ports.node.exporter }}
+          protocol: TCP
+        env:
+        - name: CHIA_EXPORTER_HOSTNAME
+          value: localhost
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        volumeMounts:
+        - name: chiaroot
+          mountPath: /chia-data
+      - name: node
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        ports:
+        - name: daemon
+          containerPort: {{ .Values.ports.node.daemon }}
+          protocol: TCP
         - name: peers
           containerPort: {{ .Values.ports.node.peers }}
           protocol: TCP
@@ -53,6 +71,8 @@ spec:
         volumeMounts:
         - name: secret-ca
           mountPath: /chia-ca
+        - name: chiaroot
+          mountPath: /chia-data
         - name: {{ .Values.network }}-database
           mountPath: /chia-data/db
         imagePullPolicy: Always
