@@ -13,6 +13,19 @@ spec:
         app: {{ .Values.network }}-wallet
     spec:
       containers:
+      - name: exporter
+        image: ghcr.io/chia-network/chia-exporter:latest
+        ports:
+        - name: peers
+          containerPort: 9914
+          protocol: TCP
+        env:
+        - name: CHIA_EXPORTER_HOSTNAME
+          value: chia
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        volumeMounts:
+        - name: chiaroot
+          mountPath: /chia-data
       - name: wallet
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         env:

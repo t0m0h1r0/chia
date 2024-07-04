@@ -29,6 +29,19 @@ spec:
         - name: chia-config
           mountPath: /chia-config
       containers:
+      - name: exporter
+        image: ghcr.io/chia-network/chia-exporter:latest
+        ports:
+        - name: peers
+          containerPort: 9914
+          protocol: TCP
+        env:
+        - name: CHIA_EXPORTER_HOSTNAME
+          value: chia
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        volumeMounts:
+        - name: chiaroot
+          mountPath: /chia-data
       - name: farmer
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         env:
