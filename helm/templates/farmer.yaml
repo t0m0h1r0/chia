@@ -22,6 +22,7 @@ spec:
           - -c
           - |
             chia init && \
+            rm -rf /chia-data/config/ssl && \
             yq eval-all 'select(fileIndex == 0) * select(fileIndex == 1) | .pool.pool_list = select(fileIndex == 1)' /chia-data/config/config.yaml /chia-config/pool_list.yaml -i
         volumeMounts:
         - name: chiaroot
@@ -29,19 +30,6 @@ spec:
         - name: chia-config
           mountPath: /chia-config
       containers:
-      - name: exporter
-        image: ghcr.io/chia-network/chia-exporter:latest
-        ports:
-        - name: exporter
-          containerPort: {{ .Values.ports.farmer.exporter }}
-          protocol: TCP
-        env:
-        - name: CHIA_EXPORTER_HOSTNAME
-          value: localhost
-        {{ include "chia.commonEnv" . | nindent 8 }}
-        volumeMounts:
-        - name: chiaroot
-          mountPath: /chia-data
       - name: farmer
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         env:
@@ -67,6 +55,19 @@ spec:
           name: secret-ca
         - mountPath: /key
           name: key
+        - name: chiaroot
+          mountPath: /chia-data
+      - name: exporter
+        image: ghcr.io/chia-network/chia-exporter:latest
+        ports:
+        - name: exporter
+          containerPort: {{ .Values.ports.farmer.exporter }}
+          protocol: TCP
+        env:
+        - name: CHIA_EXPORTER_HOSTNAME
+          value: localhost
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        volumeMounts:
         - name: chiaroot
           mountPath: /chia-data
       restartPolicy: Always
