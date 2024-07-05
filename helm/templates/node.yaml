@@ -40,12 +40,12 @@ spec:
       - name: exporter
         image: ghcr.io/chia-network/chia-exporter:latest
         ports:
-        - name: peers
-          containerPort: 9914
+        - name: exporter
+          containerPort: {{ .Values.ports.node.exporter }}
           protocol: TCP
         env:
         - name: CHIA_EXPORTER_HOSTNAME
-          value: chia
+          value: localhost
         {{ include "chia.commonEnv" . | nindent 8 }}
         volumeMounts:
         - name: chiaroot
@@ -53,6 +53,9 @@ spec:
       - name: node
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         ports:
+        - name: daemon
+          containerPort: {{ .Values.ports.node.daemon }}
+          protocol: TCP
         - name: peers
           containerPort: {{ .Values.ports.node.peers }}
           protocol: TCP
