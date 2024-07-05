@@ -4,18 +4,22 @@
     "node" (list 
       (dict "name" "peers" "port" .Values.ports.node.peers) 
       (dict "name" "rpc" "port" .Values.ports.node.rpc)
+      (dict "name" "exporter" "port" .Values.ports.node.exporter)
     ) 
     "farmer" (list 
       (dict "name" "peers" "port" .Values.ports.farmer.peers) 
       (dict "name" "rpc" "port" .Values.ports.farmer.rpc) 
+      (dict "name" "exporter" "port" .Values.ports.farmer.exporter)
     ) 
     "wallet" (list 
       (dict "name" "peers" "port" .Values.ports.wallet.peers) 
       (dict "name" "rpc" "port" .Values.ports.wallet.rpc)
+      (dict "name" "exporter" "port" .Values.ports.wallet.exporter)
     ) 
     "harvester" (list 
       (dict "name" "peers" "port" .Values.ports.harvester.peers) 
       (dict "name" "rpc" "port" .Values.ports.harvester.rpc)
+      (dict "name" "exporter" "port" .Values.ports.harvester.exporter)
     )
 -}}
 

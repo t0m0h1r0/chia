@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+data:
+  prometheus.yaml: |-
+    {
+        "apiVersion": 1,
+        "datasources": [
+            {
+                "access":"proxy",
+                "editable": true,
+                "name": "prometheus",
+                "orgId": 1,
+                "type": "prometheus",
+                "url": "http://prometheus:9090",
+                "version": 1
+            }
+        ]
+    }
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: grafana
+spec:
+  serviceName: "grafana"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      initContainers:
+      - name: init-chown-data
+        image: busybox:1.28
+        imagePullPolicy: IfNotPresent
+        command: ["chown", "-R", "472:472", "/var/lib/grafana"]
+        volumeMounts:
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+      containers:
+      - name: grafana
+        image: grafana/grafana:latest
+        ports:
+        - name: grafana
+          containerPort: 3000
+        volumeMounts:
+        - name: grafana-datasources
+          mountPath: /etc/grafana/provisioning/datasources
+          readOnly: false
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: grafana-datasources
+        configMap:
+          defaultMode: 420
+          name: grafana-datasources
+  volumeClaimTemplates:
+  - metadata:
+      name: grafana-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: {{ .Values.storage.metrics.storageClassName }}
+      resources:
+        requests:
+          storage: {{ .Values.storage.metrics.size }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+  selector:
+    app: grafana

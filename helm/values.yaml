@@ -8,22 +8,29 @@ image:
 # Port numbers
 ports:
   farmer:
+    daemon: 55400
     peers: 8447
     rpc: 8559
+    exporter: 9914
   wallet:
+    daemon: 55400
     peers: 8449
     rpc: 9256
+    exporter: 9914
   harvester:
+    daemon: 55400
     peers: 8448
     rpc: 8560
+    exporter: 9914
   node:
+    daemon: 55400
     peers: 8444
     rpc: 8555
+    exporter: 9914
 
 # Persistent Volume Configurations
 storage:
-  wallet:
-    storageType: wallet
+  metrics:
     size: 1Gi
     storageClassName: qnap-sc
   database:
