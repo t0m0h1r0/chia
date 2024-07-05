@@ -20,20 +20,28 @@ data:
     }
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: grafana
 spec:
+  serviceName: "grafana"
   replicas: 1
   selector:
     matchLabels:
       app: grafana
   template:
     metadata:
-      name: grafana
       labels:
         app: grafana
     spec:
+      initContainers:
+      - name: init-chown-data
+        image: busybox:1.28
+        imagePullPolicy: IfNotPresent
+        command: ["chown", "-R", "472:472", "/var/lib/grafana"]
+        volumeMounts:
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
       containers:
       - name: grafana
         image: grafana/grafana:latest
@@ -41,14 +49,25 @@ spec:
         - name: grafana
           containerPort: 3000
         volumeMounts:
-          - mountPath: /etc/grafana/provisioning/datasources
-            name: grafana-datasources
-            readOnly: false
-      volumes:
         - name: grafana-datasources
-          configMap:
-            defaultMode: 420
-            name: grafana-datasources
+          mountPath: /etc/grafana/provisioning/datasources
+          readOnly: false
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: grafana-datasources
+        configMap:
+          defaultMode: 420
+          name: grafana-datasources
+  volumeClaimTemplates:
+  - metadata:
+      name: grafana-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: {{ .Values.storage.metrics.storageClassName }}
+      resources:
+        requests:
+          storage: {{ .Values.storage.metrics.size }}
 ---
 apiVersion: v1
 kind: Service
@@ -61,5 +80,3 @@ spec:
     targetPort: 3000
   selector:
     app: grafana
-
-
