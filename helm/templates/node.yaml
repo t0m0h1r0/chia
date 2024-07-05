@@ -37,19 +37,6 @@ spec:
       - name: chiaroot
         emptyDir: {}
       containers:
-      - name: exporter
-        image: ghcr.io/chia-network/chia-exporter:latest
-        ports:
-        - name: exporter
-          containerPort: {{ .Values.ports.node.exporter }}
-          protocol: TCP
-        env:
-        - name: CHIA_EXPORTER_HOSTNAME
-          value: localhost
-        {{ include "chia.commonEnv" . | nindent 8 }}
-        volumeMounts:
-        - name: chiaroot
-          mountPath: /chia-data
       - name: node
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         ports:
@@ -75,6 +62,18 @@ spec:
           mountPath: /chia-data
         - name: {{ .Values.network }}-database
           mountPath: /chia-data/db
+      - name: exporter
+        image: ghcr.io/chia-network/chia-exporter:latest
+        ports:
+        - name: exporter
+          containerPort: {{ .Values.ports.node.exporter }}
+          protocol: TCP
+        env:
+        - name: CHIA_EXPORTER_HOSTNAME
+          value: localhost
+        {{ include "chia.commonEnv" . | nindent 8 }}
+        volumeMounts:
+        - name: chiaroot
+          mountPath: /chia-data
         imagePullPolicy: Always
       restartPolicy: Always
-
