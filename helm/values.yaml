@@ -30,8 +30,7 @@ ports:
 
 # Persistent Volume Configurations
 storage:
-  wallet:
-    storageType: wallet
+  metrics:
     size: 1Gi
     storageClassName: qnap-sc
   database:
