@@ -28,6 +28,11 @@ ports:
     rpc: 8555
     exporter: 9914
 
+security:
+  fsGroup: 2000
+  runAsUser: 1000
+
+
 # Persistent Volume Configurations
 storage:
   metrics:
