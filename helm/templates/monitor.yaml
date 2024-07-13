@@ -51,11 +51,13 @@ spec:
       labels:
         app: monitor
     spec:
+      securityContext:
+        fsGroup: 65534
       initContainers:
       - name: init-chown-data
         image: busybox:1.28
         imagePullPolicy: IfNotPresent
-        command: ["chown", "-R", "472:472", "/var/lib/grafana"]
+        command: ["chown", "-R", "65534:65534", "/var/lib/grafana"]
         volumeMounts:
         - name: monitor-storage
           mountPath: /var/lib/grafana
