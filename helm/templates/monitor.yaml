@@ -51,16 +51,20 @@ spec:
       labels:
         app: monitor
     spec:
-      securityContext:
-        fsGroup: 65534
       initContainers:
       - name: init-chown-data
         image: busybox:1.28
         imagePullPolicy: IfNotPresent
-        command: ["chown", "-R", "65534:65534", "/var/lib/grafana"]
+        command:
+        - sh
+        - -c
+        - |
+          mkdir -p /data/grafana /data/prometheus
+          chown -R 472:472 /data/grafana
+          chown -R 65534:65534 /data/prometheus
         volumeMounts:
         - name: monitor-storage
-          mountPath: /var/lib/grafana
+          mountPath: /data
       containers:
       - name: grafana
         image: grafana/grafana:latest
@@ -73,6 +77,7 @@ spec:
           readOnly: false
         - name: monitor-storage
           mountPath: /var/lib/grafana
+          subPath: grafana
       - name: prometheus
         image: prom/prometheus:latest
         args:
@@ -87,6 +92,7 @@ spec:
           subPath: prometheus.yml
         - name: monitor-storage
           mountPath: /prometheus
+          subPath: prometheus
       volumes:
       - name: grafana-datasources
         configMap:
