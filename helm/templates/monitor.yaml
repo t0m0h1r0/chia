@@ -63,8 +63,8 @@ spec:
         - -c
         - |
           mkdir -p /data/grafana /data/prometheus
-          chown -R 472:472 /data/grafana
-          chown -R 65534:65534 /data/prometheus
+          chown -R { .Values.security.runAsUser }:{ .Values.security.fsGroup } /data/grafana
+          chown -R { .Values.security.runAsUser }:{ .Values.security.fsGroup } /data/prometheus
         volumeMounts:
         - name: monitor-storage
           mountPath: /data
