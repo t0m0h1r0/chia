@@ -47,7 +47,7 @@ spec:
     matchLabels:
       app: monitor
   securityContext:
-    fsGroup: { .Values.security.fsGroup }
+    fsGroup: {{ .Values.security.fsGroup }}
     runAsNonRoot: true
   template:
     metadata:
