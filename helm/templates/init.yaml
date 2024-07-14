@@ -1,3 +1,6 @@
+{{- $chiaRoot := "/mnt/chia" }}
+{{- $secretName := printf "%s-ca" .Values.network }}
+
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -13,20 +16,27 @@ spec:
         app: chia
     spec:
       serviceAccountName: {{ .Values.serviceAccount }}
+      restartPolicy: OnFailure
+      volumes:
+      - name: chia-ssl
+        emptyDir: {}
+      
       initContainers:
-      - name: chia-init-container
+      - name: chia-init
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-        command:
-          - /bin/sh
-          - -c
-          - |
-            chia init && chmod -R a+r /mnt/chia
         env:
         - name: CHIA_ROOT
-          value: /mnt/chia
+          value: {{ $chiaRoot }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          chia init
+          chmod -R a+r {{ $chiaRoot }}
         volumeMounts:
         - name: chia-ssl
-          mountPath: /mnt/chia
+          mountPath: {{ $chiaRoot }}
+      
       containers:
       - name: kubectl
         image: bitnami/kubectl:latest
@@ -34,20 +44,15 @@ spec:
         - /bin/sh
         - -c
         - |
-          if kubectl get secret {{ .Values.network }}-ca; then
+          if kubectl get secret {{ $secretName }}; then
             echo "Secret already exists. Skipping creation."
           else
-            kubectl create secret generic {{ .Values.network }}-ca \
-              --from-file=/mnt/chia/config/ssl/ca/chia_ca.crt \
-              --from-file=/mnt/chia/config/ssl/ca/chia_ca.key \
-              --from-file=/mnt/chia/config/ssl/ca/private_ca.crt \
-              --from-file=/mnt/chia/config/ssl/ca/private_ca.key
+            kubectl create secret generic {{ $secretName }} \
+              --from-file={{ $chiaRoot }}/config/ssl/ca/chia_ca.crt \
+              --from-file={{ $chiaRoot }}/config/ssl/ca/chia_ca.key \
+              --from-file={{ $chiaRoot }}/config/ssl/ca/private_ca.crt \
+              --from-file={{ $chiaRoot }}/config/ssl/ca/private_ca.key
           fi
         volumeMounts:
         - name: chia-ssl
-          mountPath: /mnt/chia
-      volumes:
-      - name: chia-ssl
-        emptyDir: {}
-      restartPolicy: OnFailure
-
+          mountPath: {{ $chiaRoot }}
