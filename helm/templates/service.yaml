@@ -1,7 +1,7 @@
 {{- $network := .Values.network -}}
 
 {{- $serviceTypes := list "node" "farmer" "wallet" "harvester" }}
-{{- $portTypes := list "peers" "rpc" "exporter" }}
+{{- $portTypes := list "peers" "rpc" }}
 
 {{- range $service := $serviceTypes }}
 apiVersion: v1
