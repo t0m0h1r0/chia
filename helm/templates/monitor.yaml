@@ -8,28 +8,23 @@ data:
     global:
       scrape_interval: 15s
     scrape_configs:
-    - job_name: 'Delgates'
-      static_configs:
-      - targets: 
-        - "{{ .Values.network }}-node:{{ .Values.ports.node.exporter }}"
-        - "{{ .Values.network }}-farmer:{{ .Values.ports.farmer.exporter }}"
-        - "{{ .Values.network }}-wallet:{{ .Values.ports.wallet.exporter }}"
-
-    - job_name: 'chia-harvester'
+    {{- range $job := list "node" "farmer" "wallet" "harvester" }}
+    - job_name: 'chia-{{ $job }}'
       kubernetes_sd_configs:
       - role: pod
         namespaces:
           names:
-          - {{ .Release.Namespace }}
+          - {{ $.Release.Namespace }}
       relabel_configs:
       - source_labels: [__meta_kubernetes_pod_label_app]
         action: keep
-        regex: {{ .Values.network }}-harvester
+        regex: {{ $.Values.network }}-{{ $job }}
       - source_labels: [__address__]
         action: replace
         regex: ([^:]+)(?::\d+)?
-        replacement: $1:{{ .Values.ports.harvester.exporter }}
+        replacement: $1:{{ index $.Values.ports $job "exporter" }}
         target_label: __address__
+    {{- end }}
 
 ---
 apiVersion: v1
