@@ -7,5 +7,7 @@
   value: {{ .Values.env.timezone }}
 - name: log_level
   value: {{ .Values.env.logLevel }}
+- name: upnp
+  value: {{ .Values.env.upnp | quote}}
 {{- end }}
 

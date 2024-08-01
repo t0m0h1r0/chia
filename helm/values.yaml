@@ -87,6 +87,7 @@ env:
   caPath: /chia-ca
   timezone: UTC
   logLevel: INFO
+  upnp: 'false'
 
 poolList:
   - authenticationPublicKey: b085cc4cfa604b8cbdac47efb635092a9e5a352f9a45b13bb4f3ced244d2a009533d681d0456bd29fc624981fabfe24f
