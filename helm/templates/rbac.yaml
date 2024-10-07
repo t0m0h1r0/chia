@@ -2,12 +2,18 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ .Values.serviceAccount }}
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "-10"  # 低い値で先に実行される
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: secret-manager
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "-10"  # 低い値で先に実行される
 rules:
 - apiGroups: [""]
   resources: ["secrets"]
@@ -21,6 +27,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: secret-manager-binding
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "-10"  # 低い値で先に実行される
 subjects:
 - kind: ServiceAccount
   name: {{ .Values.serviceAccount }}
