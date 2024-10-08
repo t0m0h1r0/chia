@@ -58,7 +58,7 @@ storage:
     storageClassName: iscsi-static
     iscsi:
       - targetPortal: 192.168.1.110
-        iqn: iqn.2024-05.localdomain.omv1:target0
+        iqn: iqn.2024-10.localdomain.omv1:target3
         lun: 1
         fsType: xfs
       - targetPortal: 192.168.1.110
