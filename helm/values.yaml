@@ -90,11 +90,11 @@ env:
   upnp: 'false'
 
 poolList:
-  - authenticationPublicKey: b085cc4cfa604b8cbdac47efb635092a9e5a352f9a45b13bb4f3ced244d2a009533d681d0456bd29fc624981fabfe24f
-    launcherId: '0x1ac89396b6d25abd0dea42709d740814337fb96fe56b23149ca32014a11e1da0'
+  - launcherId: '0x1ac89396b6d25abd0dea42709d740814337fb96fe56b23149ca32014a11e1da0'
     ownerPublicKey: '0x962d21272e7a589bff0d0bf77492e03e3e1c89d674ba00306920a891078a869a15a02c3ce29440f89ece768c1eaae22d'
     p2SingletonPuzzleHash: '0x4d379db4ca7a516fa6c73bba3d4c3dcf424bce96ca2b6ede0d5192e5f12655f1'
     payoutInstructions: d857ae8c7178921421e4f71b26514fc0e61c50efdf2e530050dab4651d69edbc
-    poolUrl: https://na1.pool.space
-    targetPuzzleHash: '0x2f2c9ba1b2315d413a92b5f034fa03282ccba1767fd9ae7b14d942b969ed5d57'
+    poolUrl: https://xch.spacefarmers.io
+    targetPuzzleHash: '0x61751cc01a73d5e64a07d6e37b451eed9f157f04da53e3c7d06f355928ba2113'
+
 
