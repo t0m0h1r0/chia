@@ -7,11 +7,11 @@ data:
     pool:
       pool_list:
       {{- range .Values.poolList }}
-        - launcher_id: {{ .launcherId | quote }}
-          owner_public_key: {{ .ownerPublicKey | quote }}
-          p2_singleton_puzzle_hash: {{ .p2SingletonPuzzleHash | quote }}
-          payout_instructions: {{ .payoutInstructions | quote }}
-          pool_url: {{ .poolUrl | quote }}
-          target_puzzle_hash: {{ .targetPuzzleHash | quote }}
+        - launcher_id: {{ .launcher_id | quote }}
+          owner_public_key: {{ .owner_public_key | quote }}
+          p2_singleton_puzzle_hash: {{ .p2_singleton_puzzle_hash | quote }}
+          payout_instructions: {{ .payout_instructions | quote }}
+          pool_url: {{ .pool_url | quote }}
+          target_puzzle_hash: {{ .target_puzzle_hash | quote }}
       {{- end }}
 
