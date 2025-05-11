@@ -42,7 +42,7 @@ storage:
     useDynamicProvisioning: true
     fixed:
       storageType: database
-      storageClassName: iscsi-static
+      storageClassName: iscsi-csi-sc  # StorageClassを更新（オプション）
       size: 250Gi
       iscsi:
         targetPortal: 192.168.1.112
@@ -55,7 +55,7 @@ storage:
   plots:
     size: 1Gi
     storageType: plots
-    storageClassName: iscsi-static
+    storageClassName: iscsi-csi-sc  # StorageClassを更新（オプション）
     iscsi:
       - targetPortal: 192.168.1.110
         iqn: iqn.2024-10.localdomain.omv1:target3
@@ -77,7 +77,6 @@ storage:
         iqn: iqn.2004-04.com.qnap:ts-832px:iscsi.target.576194
         lun: 1
         fsType: xfs
-
 # Service Account
 serviceAccount: chia-service-account
 

@@ -11,12 +11,14 @@ spec:
   accessModes:
   - ReadWriteOnce
   storageClassName: {{ .Values.storage.database.fixed.storageClassName }}
-  iscsi:
-    targetPortal: {{ .Values.storage.database.fixed.iscsi.targetPortal }}
-    iqn: {{ .Values.storage.database.fixed.iscsi.iqn }}
-    lun: {{ .Values.storage.database.fixed.iscsi.lun }}
-    fsType: {{ .Values.storage.database.fixed.iscsi.fsType }}
-    readOnly: false
+  csi:
+    driver: iscsi.csi.k8s.io
+    volumeHandle: {{ .Values.network }}-database-vol
+    volumeAttributes:
+      targetPortal: {{ .Values.storage.database.fixed.iscsi.targetPortal }}
+      iqn: {{ .Values.storage.database.fixed.iscsi.iqn }}
+      lun: "{{ .Values.storage.database.fixed.iscsi.lun }}"
+      fsType: {{ .Values.storage.database.fixed.iscsi.fsType }}
+      readOnly: "false"
 ---
 {{- end }}
-

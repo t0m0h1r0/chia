@@ -11,12 +11,14 @@ spec:
   accessModes:
   - ReadOnlyMany
   storageClassName: {{ $.Values.storage.plots.storageClassName }}
-  iscsi:
-    targetPortal: {{ $plot.targetPortal }}
-    iqn: {{ $plot.iqn }}
-    lun: {{ $plot.lun }}
-    fsType: {{ $plot.fsType }}
-    readOnly: true
+  csi:
+    driver: iscsi.csi.k8s.io
+    volumeHandle: {{ $.Values.network }}-plots-vol-{{ $index }}
+    volumeAttributes:
+      targetPortal: {{ $plot.targetPortal }}
+      iqn: {{ $plot.iqn }}
+      lun: "{{ $plot.lun }}"
+      fsType: {{ $plot.fsType }}
+      readOnly: "true"
 ---
 {{- end }}
-
