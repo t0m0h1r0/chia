@@ -40,7 +40,7 @@ spec:
       
       containers:
       - name: kubectl
-        image: bitnami/kubectl:latest
+        image: registry.k8s.io/kubectl:latest
         command:
         - /bin/sh
         - -c
