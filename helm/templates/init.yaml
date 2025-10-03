@@ -40,7 +40,7 @@ spec:
       
       containers:
       - name: kubectl
-        image: registry.k8s.io/kubectl:latest
+        image: rancher/kubectl:latest
         command:
         - /bin/sh
         - -c
