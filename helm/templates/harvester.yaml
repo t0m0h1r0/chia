@@ -71,6 +71,59 @@ spec:
         - name: {{ .Values.network }}-plots
           readOnly: true
           mountPath: /plots
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - |
+              # iSCSIマウントポイントの読み取りテスト
+              if ! timeout 5 ls /plots > /dev/null 2>&1; then
+                echo "ERROR: Cannot access /plots directory"
+                exit 1
+              fi
+              
+              # ディレクトリが空でないことを確認
+              if [ -z "$(ls -A /plots 2>/dev/null)" ]; then
+                echo "ERROR: /plots directory is empty"
+                exit 1
+              fi
+              
+              # 実際にファイルにアクセス可能か確認
+              if ! timeout 5 find /plots -maxdepth 1 -type f > /dev/null 2>&1; then
+                echo "ERROR: Cannot read files in /plots"
+                exit 1
+              fi
+              
+              exit 0
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - |
+              # iSCSIマウントポイントへの高速アクセステスト
+              if ! timeout 3 ls /plots > /dev/null 2>&1; then
+                echo "WARN: /plots directory not accessible"
+                exit 1
+              fi
+              
+              # Chiaデーモンの状態確認
+              if ! timeout 3 chia rpc harvester get_plots > /dev/null 2>&1; then
+                echo "WARN: Harvester RPC not responding"
+                exit 1
+              fi
+              
+              exit 0
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 2
+          successThreshold: 1
       - name: exporter
         image: ghcr.io/chia-network/chia-exporter:latest
         ports:
@@ -85,4 +138,3 @@ spec:
         - name: chiaroot
           mountPath: /chia-data
       restartPolicy: Always
-
